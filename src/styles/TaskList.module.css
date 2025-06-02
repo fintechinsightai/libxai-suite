@@ -1,0 +1,292 @@
+/* TaskList.module.css */
+
+.wrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem;
+
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-bg-accent);
+  transition: background-color var(--transition-normal);
+}
+
+/* WebKit - Scrollbar vertical */
+.wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.wrapper::-webkit-scrollbar-track {
+  background: var(--color-bg-accent);
+}
+
+.wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 4px;
+}
+
+.wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-muted);
+}
+
+/* Contenedor de grupo de tareas */
+.group {
+  position: relative;
+  background-color: var(--color-bg-primary);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+/* Tarea principal */
+.parent {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  height: 60px;
+  border-radius: 8px;
+  background-color: var(--color-bg-accent);
+  border: 1px solid var(--color-border);
+  transition: background-color 0.2s ease, border-color var(--transition-normal);
+}
+
+.parent:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* Botón para expandir/colapsar */
+.toggleBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  transition: color 0.2s ease;
+}
+
+.toggleBtn:hover {
+  color: var(--color-text-primary);
+}
+
+/* Título de la tarea */
+.parentTitle {
+  flex: 1;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-right: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition-normal);
+}
+
+/* Indicador de progreso */
+.progressBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent-blue);
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  min-width: 32px;
+  transition: background-color var(--transition-normal);
+}
+
+/* Variantes de colores para diferentes niveles de progreso */
+.progressComplete {
+  background-color: var(--color-accent-green);
+}
+
+.progressHigh {
+  background-color: var(--color-accent-blue);
+}
+
+.progressMedium {
+  background-color: var(--color-accent-purple);
+}
+
+.progressLow {
+  background-color: var(--color-accent-purple);
+  opacity: 0.85;
+}
+
+.progressZero {
+  background-color: var(--color-text-muted);
+}
+
+/* Lista de subtareas */
+.subtaskList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-left: 2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Subtarea individual */
+.subtask {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 1rem;
+  margin-bottom: 5px;
+  background-color: var(--color-bg-accent);
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+/* Etiqueta de subtarea */
+.subLabel {
+  flex: 1;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition-normal);
+}
+
+/* Diseño responsivo - Tablets */
+@media (max-width: 1024px) {
+  .parent {
+    padding: 0.9rem;
+    height: 56px;
+  }
+
+  .toggleBtn {
+    font-size: 15px;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+  }
+
+  .parentTitle {
+    font-size: 14px;
+  }
+
+  .progressBadge {
+    font-size: 11px;
+    padding: 0.2rem 0.45rem;
+    min-width: 30px;
+  }
+
+  .subtask {
+    height: 26px;
+  }
+
+  .subLabel {
+    font-size: 12px;
+  }
+}
+
+/* Diseño responsivo - Tablets pequeñas */
+@media (max-width: 850px) {
+  .wrapper {
+    padding: 0.4rem;
+  }
+
+  .group {
+    margin-bottom: 6px;
+  }
+
+  .parent {
+    padding: 0.8rem;
+    height: 52px;
+  }
+
+  .toggleBtn {
+    font-size: 14px;
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+  }
+
+  .parentTitle {
+    font-size: 13px;
+  }
+
+  .subtaskList {
+    padding-left: 1.75rem;
+  }
+}
+
+/* Diseño responsivo - Móviles */
+@media (max-width: 640px) {
+  .wrapper {
+    padding: 0.25rem;
+  }
+
+  .group {
+    margin-bottom: 5px;
+  }
+
+  .parent {
+    padding: 0.6rem;
+    height: 44px;
+  }
+
+  .toggleBtn {
+    font-size: 12px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+
+  .parentTitle {
+    font-size: 11px;
+  }
+
+  .progressBadge {
+    font-size: 9px;
+    padding: 0.15rem 0.3rem;
+    min-width: 24px;
+  }
+
+  .subtaskList {
+    padding-left: 1.25rem;
+  }
+
+  .subtask {
+    height: 20px;
+    padding: 0 0.6rem;
+  }
+
+  .subLabel {
+    font-size: 9px;
+  }
+}
+
+/* Ajustes específicos para tema claro */
+[data-theme="light"] .parent:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+[data-theme="light"] .subtask:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* Transiciones suaves para todos los elementos */
+.parent,
+.subtask,
+.toggleBtn,
+.parentTitle,
+.subLabel,
+.progressBadge {
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+}

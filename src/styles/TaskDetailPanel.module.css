@@ -1,0 +1,884 @@
+/* ----- PANEL DE DETALLES DE TAREA ----- */
+.taskDetailPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 320px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  height: 100%;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.taskDetailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.taskDetailHeader h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
+}
+
+.closeDetailBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.closeDetailBtn:hover {
+  color: var(--color-text-primary);
+}
+
+.taskDetailContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.taskDetailTitle {
+  margin: 0;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-light);
+  transition: color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.taskColorBar {
+  height: 4px;
+  margin: 0 20px;
+  border-radius: 2px;
+}
+
+/* ----- SECCIONES DEL PANEL DE DETALLES ----- */
+.taskDatesSection,
+.taskProgressSection,
+.taskResourcesSection,
+.taskTimelineSection,
+.taskDependenciesSection,
+.taskInsightsSection,
+.taskActionsSection {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border-light);
+  transition: border-color var(--transition-normal);
+}
+
+.taskDatesSection h4,
+.taskProgressSection h4,
+.taskResourcesSection h4,
+.taskTimelineSection h4,
+.taskDependenciesSection h4,
+.taskActionsSection h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-normal);
+}
+
+/* Sección de fechas - AJUSTES PARA REACT-DATEPICKER */
+.taskDatesContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.taskDateBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-accent);
+  border-radius: 6px;
+  padding: 10px;
+  text-align: center;
+  transition: background-color var(--transition-normal);
+  position: relative; /* Para posicionamiento del datepicker */
+}
+
+.taskDateBox span {
+  font-size: 13px;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
+}
+
+.taskDateLabel {
+  margin-top: 4px;
+  font-size: 12px !important;
+  color: var(--color-text-muted) !important;
+  transition: color var(--transition-normal);
+}
+
+/* Estilos específicos para react-datepicker */
+.react-datepicker-wrapper {
+  width: 100%;
+  display: block;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+  display: block;
+}
+
+.react-datepicker__input-container input[type="text"] {
+  width: 100% !important;
+  box-sizing: border-box;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Asegurar que el datepicker no afecte al scroll del panel */
+.react-datepicker-popper {
+  position: fixed !important; /* Cambio clave: usar fixed en lugar de absolute */
+  z-index: 999999 !important; /* Muy alto para estar sobre todo */
+  transform: none !important; /* Evitar transformaciones que puedan causar problemas */
+}
+
+.react-datepicker {
+  font-family: inherit;
+  font-size: 13px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-lg);
+  background-color: var(--color-bg-primary);
+  overflow: hidden;
+}
+
+/* Header del datepicker */
+.react-datepicker__header {
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  padding: 8px 0;
+}
+
+.react-datepicker__current-month {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Navegación del datepicker */
+.react-datepicker__navigation {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.react-datepicker__navigation:hover {
+  color: var(--color-text-primary);
+}
+
+/* Días de la semana */
+.react-datepicker__day-name {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  width: 32px;
+  line-height: 1.7;
+}
+
+/* Días del mes */
+.react-datepicker__day {
+  color: var(--color-text-primary);
+  font-size: 13px;
+  width: 32px;
+  line-height: 1.7;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.react-datepicker__day:hover {
+  background-color: var(--color-bg-accent);
+  color: var(--color-text-primary);
+}
+
+.react-datepicker__day--selected {
+  background-color: var(--color-accent-blue) !important;
+  color: white !important;
+}
+
+.react-datepicker__day--today {
+  font-weight: 600;
+  background-color: var(--color-bg-accent);
+}
+
+.react-datepicker__day--outside-month {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+/* Input específico para duración */
+.durationInput[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  text-align: center;
+  font-weight: 500;
+}
+
+.durationInput[type="number"]::-webkit-outer-spin-button,
+.durationInput[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Prevenir que el scroll del number input afecte al panel */
+.durationInput[type="number"] {
+  -webkit-overflow-scrolling: touch; /* Mejorar scroll en iOS */
+  overscroll-behavior: contain; /* Evitar que el scroll se propague */
+}
+
+/* Sección de progreso */
+.taskProgressBar {
+  height: 6px;
+  background-color: var(--color-border);
+  border-radius: 3px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  position: relative;
+  transition: background-color var(--transition-normal);
+}
+
+.taskProgressFill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-blue),
+    var(--color-accent-green)
+  );
+  border-radius: 3px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.taskProgressFill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.5s infinite;
+}
+
+.taskProgressInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.progressValueContainer {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.progressChangeIndicator {
+  position: absolute;
+  top: -30px;
+  right: -10px;
+  background-color: var(--color-accent-green);
+  color: white;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  animation: fadeInOut 2s forwards;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  transform: translateY(5px);
+  z-index: 5;
+  transition: background-color var(--transition-normal);
+}
+
+.indicatorArrow {
+  position: absolute;
+  bottom: -4px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--color-accent-green);
+  transition: border-top-color var(--transition-normal);
+}
+
+.indicatorValue {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.taskProgressSlider {
+  width: 100%;
+  margin: 0;
+  background-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.taskProgressSlider:focus {
+  outline: none;
+}
+
+.taskProgressSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: var(--color-accent-blue);
+  cursor: pointer;
+  margin-top: -7px;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--color-text-primary);
+  transition: background-color 0.2s;
+}
+
+.taskProgressSlider::-webkit-slider-thumb:hover {
+  background: var(--color-accent-blue-light);
+}
+
+.taskProgressSlider::-webkit-slider-runnable-track {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  transition: background-color var(--transition-normal);
+}
+
+.taskProgressSlider::-moz-range-thumb {
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  background: var(--color-accent-blue);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--color-text-primary);
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.taskProgressSlider::-moz-range-track {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  transition: background-color var(--transition-normal);
+}
+
+/* Sección de recursos */
+.taskResourcesInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.taskResourcesInfo span {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+.taskResourcesButton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: var(--color-border);
+  border: none;
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s, color var(--transition-normal);
+}
+
+.taskResourcesButton:hover {
+  background-color: var(--color-bg-accent);
+}
+
+.dropdownIcon {
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+/* Sección de línea temporal */
+.taskTimelineInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.timelinePoint {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.timelineDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--color-accent-blue);
+  margin-top: 4px;
+  transition: background-color var(--transition-normal);
+}
+
+.timelineText {
+  display: flex;
+  flex-direction: column;
+}
+
+.timelineText strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
+}
+
+.timelineText span {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+  transition: color var(--transition-normal);
+}
+
+.timelineDuration {
+  margin-top: 4px;
+  border-top: 1px dashed var(--color-accent-blue);
+  padding-top: 8px;
+  transition: border-top-color var(--transition-normal);
+}
+
+.timelineDuration span {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+/* Sección de dependencias */
+.taskDependencyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: var(--color-bg-accent);
+  border-radius: 6px;
+  transition: background-color var(--transition-normal);
+}
+
+.taskDependencyItem span {
+  font-size: 13px;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
+}
+
+.dependencyType {
+  font-size: 12px !important;
+  color: var(--color-text-muted) !important;
+  background-color: var(--color-border);
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.taskNoDependencies {
+  display: flex;
+  justify-content: center;
+}
+
+.addDependencyButton {
+  padding: 6px 12px;
+  background-color: transparent;
+  border: 1px dashed var(--color-accent-blue);
+  border-radius: 6px;
+  color: var(--color-accent-blue);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.addDependencyButton:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Sección de insights IA */
+.taskInsightsSection {
+  background-color: var(--color-bg-secondary);
+  border-radius: 0;
+  padding: 16px 20px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--color-border-light);
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.taskInsightsHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.taskInsightsIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  background-color: var(--color-accent-purple);
+  color: white;
+  font-weight: bold;
+  margin-right: 10px;
+  font-size: 12px;
+  transition: background-color var(--transition-normal);
+}
+
+.taskInsightsHeader span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
+}
+
+.taskInsightsContent {
+  background-color: var(--color-bg-accent);
+  border-radius: 6px;
+  padding: 12px;
+  transition: background-color var(--transition-normal);
+}
+
+.taskInsightsContent h5 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
+}
+
+.taskInsightsContent p {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-normal);
+}
+
+.showSuggestionsButton {
+  background-color: var(--color-accent-purple);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 12px;
+  transition: all 0.2s;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+}
+
+.showSuggestionsButton:hover {
+  background-color: var(--color-accent-purple);
+  filter: brightness(110%);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.showSuggestionsButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ----- ESTILOS PARA EDITAR Y ELIMINAR ----- */
+/* Sección de acciones */
+.taskActionsButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Botones de acción */
+.taskEditButton,
+.taskDeleteButton,
+.taskCancelButton,
+.taskSaveButton,
+.taskDeleteConfirmButton {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+/* Botón Editar */
+.taskEditButton {
+  background-color: var(--color-accent-blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-normal), transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.taskEditButton:hover {
+  background-color: var(--color-accent-blue-light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.taskEditButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Botón Eliminar */
+.taskDeleteButton {
+  background-color: var(--color-accent-orange);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-normal), transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.taskDeleteButton:hover {
+  background-color: var(--color-accent-orange);
+  filter: brightness(90%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.taskDeleteButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Botón Cancelar */
+.taskCancelButton {
+  background-color: var(--color-text-muted);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-normal), transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.taskCancelButton:hover {
+  background-color: var(--color-text-muted);
+  filter: brightness(90%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.taskCancelButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Botón Guardar */
+.taskSaveButton {
+  background-color: var(--color-accent-green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  transition: background-color var(--transition-normal), transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.taskSaveButton:hover {
+  background-color: var(--color-accent-green);
+  filter: brightness(90%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.taskSaveButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Botón Confirmar Eliminación */
+.taskDeleteConfirmButton {
+  background-color: var(--color-accent-orange);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-normal), transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.taskDeleteConfirmButton:hover {
+  background-color: var(--color-accent-orange);
+  filter: brightness(90%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.taskDeleteConfirmButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Mensaje de confirmación de eliminación */
+.deleteConfirmMessage {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 12px;
+  background-color: rgba(239, 68, 68, 0.1);
+  border-radius: 6px;
+  border: 1px solid var(--color-accent-orange);
+  color: var(--color-accent-orange);
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-out;
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal), color var(--transition-normal);
+}
+
+/* Footer del panel de detalles */
+.taskDetailFooter {
+  padding: 16px 20px;
+  background-color: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border);
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+/* Estilos para los campos de edición */
+.editTaskNameInput {
+  width: 100%;
+  background-color: var(--color-bg-accent);
+  border: 1px solid var(--color-accent-blue);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 12px;
+  margin: 0;
+  transition: all 0.2s ease, background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.dateInput,
+.durationInput {
+  width: 100%;
+  background-color: var(--color-bg-accent);
+  border: 1px solid var(--color-accent-blue);
+  border-radius: 6px;
+  color: var(--color-text-primary);
+  font-size: 14px;
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease, background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+  box-sizing: border-box; /* Asegurar box-sizing correcto */
+}
+
+.dateInput:focus,
+.durationInput:focus,
+.editTaskNameInput:focus {
+  outline: none;
+  border-color: var(--color-accent-blue-light);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  background-color: var(--color-bg-secondary);
+}
+
+/* Adaptaciones específicas para modo claro */
+[data-theme="light"] .taskDateBox,
+[data-theme="light"] .taskDependencyItem,
+[data-theme="light"] .taskInsightsContent {
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .addDependencyButton:hover {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="light"] .deleteConfirmMessage {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+/* ----- ANIMACIONES ----- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

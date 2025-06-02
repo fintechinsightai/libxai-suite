@@ -1,0 +1,1030 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  background-color: var(--color-bg-primary); /* Usando variable para el fondo */
+  color: var(--color-text-primary); /* Usando variable para el texto */
+  overflow: hidden;
+  position: relative;
+  min-height: 100%;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+/* Barra superior con logo y avatar */
+.topbarMain {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  background-color: var(
+    --color-bg-secondary
+  ); /* Usando variable para el fondo */
+  border-bottom: 1px solid var(--color-border);
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  z-index: 30;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: space-between;
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+/* Logo y título */
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.logoCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-accent-blue); /* Usando variable para el azul */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.logoText {
+  font-weight: 600;
+  font-size: 1.125rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+}
+
+/* Sección derecha: buscador, toggle de tema y avatar */
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.searchBar {
+  background-color: var(--color-bg-accent); /* Usando variable para el fondo */
+  border: 1px solid var(--color-border);
+  border-radius: 9999px; /* Fully rounded */
+  padding: 0.375rem 1rem;
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  width: 250px;
+  outline: none;
+  transition: border-color 0.2s, background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.searchBar:focus {
+  border-color: var(--color-accent-blue); /* Blue focus border */
+}
+
+.searchBar::placeholder {
+  color: var(--color-text-muted); /* Lighter placeholder text */
+}
+
+/* Contenedor para el botón de tema */
+.themeToggleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-accent-blue); /* Blue avatar */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Barra con botones de vista, control de escala y botones de acción */
+.topbarSub {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  background-color: var(
+    --color-bg-secondary
+  ); /* Usando variable para el fondo */
+  border-bottom: 1px solid var(--color-border);
+  height: 48px;
+  min-height: 48px;
+  max-height: 48px;
+  z-index: 20;
+  position: sticky;
+  top: 56px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: space-between; /* Distribute items */
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+/* Vista Gantt botón */
+.viewTabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.viewTabActive {
+  background-color: var(
+    --color-accent-blue
+  ); /* Blue background for active tab */
+  color: white;
+  border: none;
+  padding: 0.375rem 1rem;
+  border-radius: 9999px; /* Fully rounded button */
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.viewTabActive:hover {
+  background-color: var(--color-accent-blue-light); /* Darker blue on hover */
+}
+
+/* Control de escala de tiempo */
+.scaleGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* Center in the bar */
+}
+
+.scaleControl {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-bg-secondary);
+  padding: 0.25rem;
+  font-size: 14px;
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.scaleControl button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--color-bg-accent); /* Darker button background */
+  color: var(--color-text-primary);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, color var(--transition-normal);
+}
+
+.scaleControl button:hover {
+  background-color: var(--color-border); /* Lighter on hover */
+}
+
+.scaleControl span {
+  padding: 0 0.75rem;
+  color: var(--color-text-secondary);
+  min-width: 70px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Grupo de acciones (botones Grilla, IA y Exportar) */
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Botón de configuración de grilla */
+.gridConfigButton {
+  background-color: var(--color-bg-accent);
+  border: 1px solid var(--color-border);
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.gridConfigButton:hover {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-accent-blue);
+  transform: translateY(-1px);
+}
+
+.gridConfigButton svg {
+  transition: transform 0.2s ease;
+}
+
+.gridConfigButton:hover svg {
+  transform: rotate(15deg);
+}
+
+.aiBadge {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-accent-blue); /* Blue background */
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px; /* Fully rounded */
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.aiBadge:hover {
+  background-color: var(--color-accent-blue-light); /* Darker blue on hover */
+}
+
+.aiIcon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  color: var(--color-accent-blue); /* Blue text in white circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+  margin-right: 0.5rem;
+}
+
+/* Contenedor para el menú de exportación */
+.exportContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.exportButton {
+  background-color: transparent;
+  color: var(--color-text-secondary); /* Light text color */
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px; /* Fully rounded */
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color var(--transition-normal);
+}
+
+.exportButton:hover {
+  background-color: var(--color-bg-accent); /* Slight background on hover */
+}
+
+/* Menú desplegable de opciones de exportación */
+.exportOptions {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 170px; /* ACTUALIZADO: Aumentado de 160px a 170px para acomodar MS Project */
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-md);
+  margin-top: 0.5rem;
+  z-index: 100;
+  overflow: hidden;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.exportOptions button {
+  width: 100%;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  padding: 0.625rem 1rem;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.exportOptions button:last-child {
+  border-bottom: none;
+}
+
+.exportOptions button:hover {
+  background-color: var(--color-bg-accent);
+}
+
+/* Iconos para las opciones de exportación */
+.exportOptions button::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 0.75rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.exportOptions button:nth-child(1)::before {
+  background-color: #ff5733; /* Color para PDF */
+  border-radius: 2px;
+}
+
+.exportOptions button:nth-child(2)::before {
+  background-color: #33aa46; /* Color para Excel */
+  border-radius: 2px;
+}
+
+.exportOptions button:nth-child(3)::before {
+  background-color: #4285f4; /* Color para CSV */
+  border-radius: 2px;
+}
+
+.exportOptions button:nth-child(4)::before {
+  background-color: #fbbc05; /* Color para PNG */
+  border-radius: 2px;
+}
+
+/* NUEVO: Estilo para el quinto botón (MS Project) */
+.exportOptions button:nth-child(5)::before {
+  background-color: #0f4c81; /* Color azul para Microsoft Project */
+  border-radius: 2px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mensajes de exportación */
+.exportMessage {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--color-bg-secondary);
+  border-left: 4px solid var(--color-accent-blue);
+  color: var(--color-text-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  box-shadow: var(--shadow-md);
+  max-width: 300px;
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+/* Modal de notificación de exportación */
+.exportMessageModal {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow-xl);
+}
+
+.exportMessageContent {
+  text-align: center;
+}
+
+.exportMessageContent p {
+  color: var(--color-text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.exportMessageButton {
+  background-color: var(--color-accent-blue);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.exportMessageButton:hover {
+  background-color: var(--color-accent-blue-light);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Contenido principal */
+.content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: calc(100% - 104px); /* Subtract height of both topbars */
+  min-height: 0;
+  width: 100%;
+}
+
+/* Barra lateral */
+.sidebar {
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+  background-color: var(--color-bg-primary); /* Dark blue */
+  border-right: 1px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.sectionTitle {
+  padding: 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin: 0;
+  background-color: var(--color-bg-accent); /* Slightly lighter blue */
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+}
+
+/* Área del diagrama Gantt */
+.gantt {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: auto;
+  height: 100%; /* <-- AGREGAR ESTO */
+  width: calc(100% - 300px);
+  max-width: calc(100% - 300px);
+  background-color: var(--color-bg-primary);
+  transition: background-color var(--transition-normal);
+}
+
+/* Botón flotante para añadir tarea */
+.addTaskFloating {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: var(--color-accent-green); /* Green button */
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+  transition: all 0.2s;
+}
+
+.addTaskFloating:hover {
+  background-color: var(--color-accent-green); /* Darker green on hover */
+  filter: brightness(90%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Modal overlay para chat IA y formularios */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Panel de IA */
+.iaChatPanel {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 320px;
+  background-color: var(--color-bg-secondary); /* Slightly lighter blue */
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  z-index: 50;
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.iaChatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-bg-primary); /* Dark blue header */
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.iaChatTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.iaChatBody {
+  padding: 0.75rem;
+}
+
+.iaChatPrompt {
+  width: calc(100% - 0px); /* Opción 1: Usar calc() */
+  /* O alternativamente: */
+  box-sizing: border-box; /* Opción 2: Cambiar box-sizing */
+  width: 100%;
+  height: 100px;
+  padding: 0.5rem;
+  background-color: var(--color-bg-accent);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  color: var(--color-text-primary);
+  resize: none;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.iaChatPrompt:focus {
+  outline: none;
+  border-color: var(--color-accent-blue); /* Blue focus */
+}
+
+.iaChatSubmit {
+  width: 100%;
+  background-color: var(--color-accent-blue); /* Blue button */
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.iaChatSubmit:hover {
+  background-color: var(--color-accent-blue-light); /* Darker blue on hover */
+}
+
+/* Formulario para añadir tarea */
+.formContainer {
+  background-color: var(--color-bg-secondary); /* Slightly lighter blue */
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 450px;
+  transition: background-color var(--transition-normal);
+}
+
+.formTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
+}
+
+/* Estilos para los formularios - a agregar en AddTaskForm */
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.375rem;
+  color: var(--color-text-secondary);
+  transition: color var(--transition-normal);
+}
+
+.formInput,
+.formSelect {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--color-bg-accent); /* Darker input */
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.formInput:focus,
+.formSelect:focus {
+  outline: none;
+  border-color: var(--color-accent-blue); /* Blue focus */
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.cancelButton {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.cancelButton:hover {
+  background-color: var(--color-bg-accent);
+}
+
+.submitButton {
+  padding: 0.5rem 1rem;
+  background-color: var(--color-accent-green); /* Green button */
+  border: none;
+  border-radius: 0.375rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submitButton:hover {
+  background-color: var(--color-accent-green); /* Darker green */
+  filter: brightness(90%);
+}
+
+/* Estados adicionales para mejorar la experiencia */
+.gridConfigButton:focus {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 2px;
+}
+
+.gridConfigButton:active {
+  transform: scale(0.98);
+}
+
+/* Estados de carga o disabled si es necesario */
+.gridConfigButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gridConfigButton:disabled:hover {
+  transform: none;
+  background-color: var(--color-bg-accent);
+}
+
+/* Ajustes finales para asegurar la compatibilidad */
+.rightSection > * {
+  flex-shrink: 0;
+}
+
+.actionGroup > * {
+  flex-shrink: 0;
+}
+
+/* RESPONSIVE DESIGNS */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 250px;
+    min-width: 250px;
+    max-width: 250px;
+  }
+
+  .gantt {
+    width: calc(100% - 250px);
+    max-width: calc(100% - 250px);
+  }
+
+  .searchBar {
+    width: 180px;
+  }
+
+  .rightSection {
+    gap: 0.75rem;
+  }
+}
+
+/* Diseño responsivo - Tablets pequeñas */
+@media (max-width: 850px) {
+  .topbarMain,
+  .topbarSub {
+    padding: 0 0.5rem;
+  }
+
+  .sidebar {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+  }
+
+  .gantt {
+    width: calc(100% - 200px);
+    max-width: calc(100% - 200px);
+  }
+
+  .searchBar {
+    width: 150px;
+  }
+
+  .rightSection {
+    gap: 0.5rem;
+  }
+}
+
+/* Diseño responsivo - Móviles en horizontal */
+@media (max-width: 768px) {
+  .topbarMain {
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .topbarSub {
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    top: auto;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .scaleGroup {
+    order: 1;
+  }
+
+  .viewTabs {
+    order: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .actionGroup {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .content {
+    flex-direction: column;
+    height: calc(100% - 150px);
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .gantt {
+    width: 100%;
+    max-width: 100%;
+    flex: 1;
+  }
+
+  .searchBar {
+    display: none;
+  }
+
+  .themeToggleWrapper {
+    margin-right: 0.5rem;
+  }
+
+  /* Ajustar spacing en móviles */
+  .rightSection {
+    gap: 0.5rem;
+  }
+
+  .addTaskFloating {
+    bottom: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* Diseño responsivo - Móviles */
+@media (max-width: 640px) {
+  .logoText {
+    font-size: 1rem;
+  }
+
+  .scaleControl {
+    font-size: 12px;
+  }
+
+  .scaleControl span {
+    min-width: 60px;
+    padding: 0 0.5rem;
+  }
+
+  .aiBadge,
+  .exportButton,
+  .viewTabActive,
+  .gridConfigButton {
+    padding: 0.25rem 0.5rem;
+    font-size: 12px;
+  }
+
+  .aiIcon {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    margin-right: 0.25rem;
+  }
+
+  .sidebar {
+    height: 180px;
+    min-height: 180px;
+    max-height: 180px;
+  }
+
+  .sectionTitle {
+    padding: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .content {
+    height: calc(100% - 160px);
+  }
+
+  .iaChatPanel {
+    width: 280px;
+    bottom: 1rem;
+    right: 1rem;
+  }
+
+  /* Configuración de grilla mobile responsive */
+  .rightSection {
+    gap: 0.4rem;
+  }
+
+  .gridConfigButton {
+    padding: 0.25rem 0.5rem;
+    font-size: 11px;
+  }
+}
+
+/* Diseño responsivo - Móviles pequeños */
+@media (max-width: 480px) {
+  .logoText {
+    display: none;
+  }
+
+  .addTaskFloating {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.25rem;
+  }
+
+  .sidebar {
+    height: 150px;
+    min-height: 150px;
+    max-height: 150px;
+  }
+
+  .iaChatPanel {
+    width: 250px;
+  }
+
+  /* Configuración de grilla muy pequeña */
+  .rightSection {
+    gap: 0.3rem;
+  }
+
+  .gridConfigButton {
+    padding: 0.2rem 0.4rem;
+    font-size: 10px;
+  }
+
+  /* Hacer que el buscador sea más pequeño en pantallas muy pequeñas */
+  .searchBar {
+    width: 120px;
+  }
+
+  .actionGroup {
+    gap: 0.5rem;
+  }
+
+  .actionGroup > * {
+    min-width: auto;
+  }
+}
+
+/* Diseño responsivo - Móviles ultra pequeños */
+@media (max-width: 360px) {
+  .rightSection {
+    gap: 0.25rem;
+  }
+
+  .gridConfigButton {
+    padding: 0.15rem 0.3rem;
+    font-size: 9px;
+  }
+
+  /* En pantallas ultra pequeñas, podemos hacer el dropdown más compacto */
+  .themeToggleWrapper {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
+
+  .actionGroup {
+    gap: 0.25rem;
+  }
+}
+
+/* Mejoras de accesibilidad y animaciones */
+.gridConfigButton:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Animaciones suaves para todos los elementos interactivos */
+.gridConfigButton {
+  transition: all 0.2s ease;
+}

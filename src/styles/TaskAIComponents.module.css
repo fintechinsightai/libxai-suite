@@ -1,0 +1,338 @@
+/* TaskAIComponents.module.css - Refactorizado y mejorado para móviles */
+
+/* Estilos para Alerta IA - Completamente rediseñada */
+.alertContainer {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px 8px;
+  background-color: var(--color-bg-primary);
+  border-radius: 4px;
+  transition: all 0.2s;
+  max-width: 200px;
+  position: relative;
+  margin-top: 8px; /* Espacio sobre la barra para evitar solapamiento */
+  margin-right: 4px;
+  box-shadow: var(--shadow-md);
+  border-top: 2px solid var(--color-accent-orange);
+  backdrop-filter: blur(2px);
+}
+
+.alertContainer:hover {
+  background-color: var(--color-bg-secondary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.alertContainer::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid var(--color-accent-orange);
+  transition: border-bottom-color var(--transition-normal);
+}
+
+.alertLabel {
+  color: var(--color-accent-orange);
+  font-weight: 600;
+  margin-right: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-normal);
+}
+
+.alertLabel::before {
+  content: "⚠️";
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+/* Estilos para Sugerencias IA */
+.suggestionsContainer {
+  position: fixed;
+  background-color: var(--color-bg-secondary);
+  border-radius: 8px;
+  width: 380px;
+  max-width: 90vw;
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-xl);
+  z-index: 1000;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-out;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.suggestionsHeader {
+  background-color: var(--color-bg-primary);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.suggestionsIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-accent-purple);
+  color: white;
+  font-weight: bold;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: background-color var(--transition-normal);
+}
+
+.suggestionsHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex: 1;
+  transition: color var(--transition-normal);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.closeButton:hover {
+  color: var(--color-text-primary);
+}
+
+.closeButton:focus {
+  outline: none;
+  color: var(--color-text-primary);
+}
+
+.suggestionsContent {
+  padding: 16px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.suggestionsTaskName {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  word-break: break-word;
+  transition: color var(--transition-normal);
+}
+
+.suggestionsList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestionItem {
+  display: flex;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: var(--color-bg-accent);
+  border-radius: 8px;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s,
+    background-color var(--transition-normal);
+}
+
+.suggestionItem:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.suggestionItem:last-child {
+  margin-bottom: 0;
+}
+
+.suggestionNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  background-color: var(--color-accent-purple);
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 12px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: background-color var(--transition-normal);
+}
+
+.suggestionText {
+  flex: 1;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  padding-right: 50px;
+  padding-bottom: 16px;
+  transition: color var(--transition-normal);
+}
+
+.applyButton {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background-color: var(--color-accent-purple);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.applyButton:hover {
+  background-color: var(--color-accent-purple);
+  filter: brightness(110%);
+}
+
+.applyButton:focus {
+  outline: 2px solid var(--color-accent-purple);
+  outline-offset: 2px;
+}
+
+/* Diseño responsivo - mejorado para móviles */
+@media (max-width: 640px) {
+  .suggestionsContainer {
+    width: 100%;
+    max-width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    top: auto;
+    right: 0;
+    transform: none;
+    border-radius: 12px 12px 0 0;
+    max-height: 80vh;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .suggestionItem {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 40px;
+  }
+
+  .suggestionNumber {
+    margin-bottom: 8px;
+  }
+
+  .suggestionText {
+    padding-right: 0;
+    width: 100%;
+  }
+
+  .alertContainer {
+    max-width: 180px;
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+
+  .alertLabel {
+    font-size: 11px;
+  }
+
+  /* Ajustes adicionales para móvil */
+  .suggestionsContent {
+    max-height: 60vh;
+    padding: 12px;
+  }
+
+  .suggestionsHeader {
+    padding: 10px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .closeButton {
+    font-size: 20px;
+    padding: 5px;
+  }
+}
+
+/* Específico para pantallas muy pequeñas */
+@media (max-width: 380px) {
+  .alertContainer {
+    max-width: 140px;
+    padding: 3px 5px;
+  }
+
+  .alertLabel {
+    font-size: 10px;
+  }
+
+  .suggestionsIcon {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .suggestionsHeader h3 {
+    font-size: 14px;
+  }
+}
+
+/* Ajustes específicos para tema claro */
+[data-theme="light"] .alertContainer {
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .suggestionItem {
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .suggestionItem:hover {
+  box-shadow: var(--shadow-md);
+}
+
+[data-theme="light"] .suggestionsContainer {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}

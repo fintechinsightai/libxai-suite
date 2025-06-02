@@ -1,0 +1,894 @@
+/* ----- ESTRUCTURA PRINCIPAL ----- */
+.wrapper {
+  position: relative;
+  background-color: var(--color-bg-primary);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  padding: 0;
+  border-radius: 0;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+.gridContainer {
+  flex: 1;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: auto;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-bg-accent);
+  transition: background-color var(--transition-normal);
+}
+
+.gridContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.gridContainer::-webkit-scrollbar-track {
+  background: var(--color-bg-accent);
+}
+
+.gridContainer::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 4px;
+}
+
+.gridContainer::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-muted);
+}
+
+.grid {
+  position: relative;
+  padding-bottom: 0;
+  min-height: 100%;
+}
+
+/* ----- ENCABEZADOS TEMPORALES ----- */
+.monthHeader {
+  display: flex;
+  background-color: var(--color-bg-secondary);
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--color-text-secondary);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.monthBlock {
+  text-align: center;
+  border-right: 1px solid var(--color-border);
+  padding: 4px 0;
+  text-transform: uppercase;
+}
+
+.weekHeader {
+  display: flex;
+  background-color: var(--color-bg-secondary);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  padding: 4px 0;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 40px;
+  z-index: 9;
+  margin-bottom: 20px;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.weekBlock {
+  text-align: center;
+  border-right: 1px solid var(--color-border);
+  padding: 4px 0;
+}
+
+/* ----- LÍNEAS DE CUADRÍCULA DINÁMICAS MODIFICADAS ----- */
+.grid::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: var(--grid-opacity, 0.1);
+}
+
+/* Ocultar grilla cuando gridType es 'none' */
+.grid[data-grid-type="none"]::before,
+.grid[data-grid-type="none"]::after {
+  display: none !important;
+}
+
+/* Solo líneas horizontales */
+.grid[data-grid-type="horizontal"]::before {
+  display: none !important;
+}
+
+/* Solo líneas verticales */
+.grid[data-grid-type="vertical"]::after {
+  display: none !important;
+}
+
+/* Escala Semanal (por defecto) - usando variables dinámicas */
+.grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 23px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 24px,
+    transparent 24px
+  );
+}
+
+/* Escala Diaria - usando variables dinámicas */
+.wrapper[data-time-scale="day"] .grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 47px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 48px,
+    transparent 48px
+  );
+}
+
+/* Escala Mensual - usando variables dinámicas */
+.wrapper[data-time-scale="month"] .grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 11px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 12px,
+    transparent 12px
+  );
+}
+
+/* Líneas horizontales - usando variables dinámicas */
+.grid::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 39px,
+    var(--grid-horizontal-color, rgba(71, 85, 105, 0.08)) 40px,
+    transparent 40px
+  );
+  background-size: 100% auto;
+  background-repeat: repeat;
+  z-index: 0;
+  opacity: var(--grid-opacity, 0.1);
+}
+
+/* Estilos de línea dinámicos para líneas punteadas */
+.grid[data-grid-type="dashed"]::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 22px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 22px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 23px,
+    transparent 23px,
+    transparent 25px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 25px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 26px,
+    transparent 26px
+  );
+}
+
+.grid[data-grid-type="dashed"]::after {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 37px,
+    var(--grid-horizontal-color, rgba(71, 85, 105, 0.08)) 37px,
+    var(--grid-horizontal-color, rgba(71, 85, 105, 0.08)) 38px,
+    transparent 38px,
+    transparent 42px,
+    var(--grid-horizontal-color, rgba(71, 85, 105, 0.08)) 42px,
+    var(--grid-horizontal-color, rgba(71, 85, 105, 0.08)) 43px,
+    transparent 43px
+  );
+}
+
+/* Estilos de línea dinámicos para líneas punteadas */
+.grid[data-grid-type="dotted"]::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 23px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 23px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.1)) 24px,
+    transparent 24px,
+    transparent 27px
+  );
+}
+
+.grid[data-grid-type="dotted"]::after {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 39px,
+    var(--grid-horizontal-color, rgba(71, 85, 105, 0.08)) 39px,
+    var(--grid-horizontal-color, rgba(71, 85, 105, 0.08)) 40px,
+    transparent 40px,
+    transparent 43px
+  );
+}
+
+/* ----- TEMA OSCURO CON VARIABLES DINÁMICAS ----- */
+[data-theme="dark"] .grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 23px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.15)) 24px,
+    transparent 24px
+  );
+}
+
+[data-theme="dark"] .wrapper[data-time-scale="day"] .grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 47px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.15)) 48px,
+    transparent 48px
+  );
+}
+
+[data-theme="dark"] .wrapper[data-time-scale="month"] .grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 11px,
+    var(--grid-vertical-color, rgba(71, 85, 105, 0.15)) 12px,
+    transparent 12px
+  );
+}
+
+[data-theme="dark"] .grid::after {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 39px,
+    var(--grid-horizontal-color, rgba(71, 85, 105, 0.15)) 40px,
+    transparent 40px
+  );
+  background-size: 100% auto;
+  background-repeat: repeat;
+}
+
+/* ----- TEMA CLARO CON VARIABLES DINÁMICAS ----- */
+[data-theme="light"] .grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 23px,
+    var(--grid-vertical-color, rgba(203, 213, 225, 0.25)) 24px,
+    transparent 24px
+  );
+}
+
+[data-theme="light"] .wrapper[data-time-scale="day"] .grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 47px,
+    var(--grid-vertical-color, rgba(203, 213, 225, 0.25)) 48px,
+    transparent 48px
+  );
+}
+
+[data-theme="light"] .wrapper[data-time-scale="month"] .grid::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 11px,
+    var(--grid-vertical-color, rgba(203, 213, 225, 0.25)) 12px,
+    transparent 12px
+  );
+}
+
+[data-theme="light"] .grid::after {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 39px,
+    var(--grid-horizontal-color, rgba(203, 213, 225, 0.25)) 40px,
+    transparent 40px
+  );
+  background-size: 100% auto;
+  background-repeat: repeat;
+}
+
+/* ----- LÍNEA DE TIEMPO ACTUAL CONTROLADA ----- */
+.currentTimeLine {
+  position: absolute;
+  top: 80px;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed rgba(59, 130, 246, 0.6);
+  z-index: 2;
+  animation: pulseLine 1.5s ease-in-out infinite;
+  opacity: var(--show-current-time, 1);
+}
+
+.currentTimeDot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+  top: 8px;
+  left: -4px;
+  z-index: 3;
+  animation: pulseDot 1.5s ease-in-out infinite;
+  opacity: var(--show-current-time, 1);
+}
+
+/* ----- BARRAS DE TAREAS - COINCIDEN CON REACT ----- */
+.taskBar {
+  position: absolute;
+  height: 28px !important;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: grab;
+  user-select: none;
+  transition: box-shadow 0.2s ease, transform 0.2s, width 0.1s ease-out;
+  box-shadow: var(--shadow-sm);
+  z-index: 5;
+  overflow: visible !important;
+  white-space: nowrap;
+}
+
+.taskBar:active {
+  cursor: grabbing;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+}
+
+.taskBar:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.taskLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  z-index: 7;
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.2;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  padding: 0 4px;
+  max-width: calc(100% - 45px);
+}
+
+/* ----- SUBTAREAS - COINCIDEN CON REACT ----- */
+.subtaskBar {
+  position: absolute;
+  height: 24px !important;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 10px;
+  background-color: #60a5fa;
+  border: 1px solid #3b82f6;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 6;
+  overflow: hidden !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, width 0.1s ease-out;
+  white-space: nowrap;
+  pointer-events: all !important;
+  cursor: grab;
+  box-sizing: border-box;
+}
+
+.subtaskBar:active {
+  cursor: grabbing;
+  box-shadow: 0 4px 10px rgba(56, 189, 248, 0.5);
+}
+
+.subtaskBar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 7px rgba(56, 189, 248, 0.4);
+}
+
+.subtaskLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  pointer-events: none;
+  margin-left: 4px;
+  margin-right: 4px;
+  position: relative;
+  z-index: 7;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  max-width: calc(100% - 12px);
+  min-width: 0;
+  display: block;
+}
+
+.subtaskContent {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0 6px;
+  padding-right: 8px;
+  position: relative;
+  z-index: 7;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ----- HANDLES DE REDIMENSIONAMIENTO ----- */
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 24px;
+  cursor: ew-resize;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  background-color: rgba(56, 189, 248, 0.7);
+  border-radius: 3px;
+  pointer-events: all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resizeHandleLeft {
+  left: 0;
+  border-radius: 5px 0 0 5px;
+}
+
+.resizeHandleRight {
+  right: 0;
+  border-radius: 0 5px 5px 0;
+}
+
+.resizeHandleIcon {
+  font-size: 12px;
+  color: white;
+  pointer-events: none;
+  font-weight: bold;
+  opacity: 0.9;
+}
+
+.subtaskBar:hover .resizeHandle {
+  opacity: 1;
+}
+
+.resizeHandle:hover {
+  opacity: 1;
+  background-color: rgba(56, 189, 248, 0.9);
+  transform: scale(1.05);
+}
+
+body.resizing {
+  cursor: ew-resize;
+  user-select: none;
+  pointer-events: none;
+}
+
+body.resizing * {
+  cursor: ew-resize;
+}
+
+body.resizing .resizeHandle,
+body.resizing .subtaskBar {
+  pointer-events: all;
+}
+
+.subtaskBar.resizing {
+  z-index: 1000;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+  transition: none;
+}
+
+.subtaskBar.resizing .resizeHandle {
+  opacity: 1;
+  background-color: rgba(56, 189, 248, 1);
+}
+
+/* ----- INDICADORES DE PROGRESO Y ESTADO ----- */
+.taskComplete {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--color-accent-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 10px;
+  box-shadow: 0 0 0 2px white, 0 0 8px rgba(34, 197, 94, 0.5);
+  z-index: 15;
+  animation: pulseComplete 2s infinite;
+}
+
+.taskProgressIndicator {
+  position: absolute;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px 0 0 6px;
+  transition: width 0.3s ease;
+  z-index: 1;
+  backdrop-filter: brightness(110%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start !important;
+  pointer-events: none;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* ----- ETIQUETA DE PORCENTAJE FLOTANTE AL LADO DERECHO ----- */
+.taskBar::after {
+  content: attr(data-progress) "%";
+  position: absolute;
+  right: -50px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 12px;
+  min-width: 30px;
+  text-align: center;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 40 !important;
+  pointer-events: none;
+}
+
+.subtaskBar::after {
+  content: attr(data-progress) "%";
+  position: absolute;
+  right: -50px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 26px;
+  text-align: center;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 40 !important;
+  pointer-events: none;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+}
+
+.taskBar:first-of-type::after {
+  right: -50px !important;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.taskProgressIndicator .taskProgressText,
+.taskBar .taskProgressText,
+.subtaskBar .taskProgressText {
+  display: none !important;
+}
+
+/* ----- CONTENEDOR SVG DE CONEXIONES ----- */
+.connectionsContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  overflow: visible;
+  will-change: transform;
+  contain: layout style paint;
+}
+
+/* ----- LÍNEAS DE DEPENDENCIA ULTRADELGADAS ----- */
+.taskDependencyLine {
+  fill: none;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease;
+  stroke: var(--color-accent-purple, rgba(79, 70, 229, 0.7));
+  stroke-width: 0.8;
+  stroke-dasharray: 4 3;
+  filter: drop-shadow(0 0 1px rgba(79, 70, 229, 0.2));
+}
+
+.subtaskDependencyLine {
+  fill: none;
+  stroke: rgba(56, 189, 248, 0.8);
+  stroke-width: 0.6;
+  stroke-dasharray: 3 2;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease;
+  display: none;
+}
+
+.dependencyPoint {
+  transition: transform 0.2s ease, fill 0.2s ease;
+  fill: var(--color-accent-purple, rgba(79, 70, 229, 1));
+  filter: drop-shadow(0 0 1px rgba(79, 70, 229, 0.3));
+  r: 2.5;
+}
+
+.subtaskDependencyPoint {
+  transition: transform 0.2s ease, fill 0.2s ease;
+  fill: rgba(56, 189, 248, 1);
+  filter: drop-shadow(0 0 1px rgba(56, 189, 248, 0.3));
+  r: 2;
+  display: none;
+}
+
+.taskDependencyLine:hover {
+  stroke-width: 1.2;
+  filter: drop-shadow(0 0 2px rgba(79, 70, 229, 0.4));
+}
+
+/* ----- COMPONENTES DE IA ----- */
+.taskAlertContainer {
+  position: absolute;
+  right: 8px;
+  top: -12px;
+  z-index: 10;
+  transition: transform 0.2s;
+  transform: scale(0.6);
+}
+
+.subtaskAlertContainer {
+  position: absolute;
+  right: 8px;
+  top: -10px;
+  z-index: 20;
+  pointer-events: all;
+}
+
+/* ----- ESTILOS PARA TAREAS TARDÍAS ----- */
+.late {
+  border: 1.5px solid var(--color-accent-orange) !important;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4) !important;
+}
+
+.late:hover {
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.6) !important;
+}
+
+/* ----- ENTRADA DE TEXTO EN LÍNEA ----- */
+.inlineInput {
+  background-color: white;
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: 4px;
+  padding: 3px 6px;
+  width: calc(100% - 16px);
+  font-size: 12px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-blue);
+}
+
+/* ----- ANIMACIONES ----- */
+@keyframes pulseLine {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseComplete {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px white, 0 0 6px rgba(34, 197, 94, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 1px white, 0 0 10px rgba(34, 197, 94, 0.8);
+  }
+}
+
+/* ----- RESPONSIVE ----- */
+@media (max-width: 1024px) {
+  .taskBar {
+    height: 38px !important;
+    font-size: 12px;
+  }
+  .subtaskBar {
+    height: 26px !important;
+    font-size: 11px;
+  }
+  .taskBar::after {
+    right: -50px !important;
+    font-size: 10px;
+  }
+  .subtaskBar::after {
+    right: -40px !important;
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 768px) {
+  .taskBar {
+    height: 34px !important;
+    font-size: 11px;
+    padding-left: 6px;
+  }
+  .subtaskBar {
+    height: 22px !important;
+    font-size: 10px;
+    padding-left: 5px;
+  }
+  .resizeHandle {
+    width: 12px !important;
+  }
+  .taskBar::after {
+    right: -50px !important;
+    font-size: 9px;
+    min-width: 24px;
+    padding: 2px 5px;
+  }
+  .subtaskBar::after {
+    right: -40px !important;
+    font-size: 8px;
+    min-width: 22px;
+    padding: 1px 4px;
+  }
+}
+
+/* ----- IMPRESIÓN ----- */
+@media print {
+  .wrapper {
+    background-color: white;
+    color: black;
+  }
+  .grid::before,
+  .grid::after {
+    display: none;
+  }
+  .currentTimeLine,
+  .currentTimeDot {
+    display: none;
+  }
+  .taskBar::after,
+  .subtaskBar::after {
+    background: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+    box-shadow: none !important;
+    right: -40px !important;
+  }
+}
+
+/* Asegurar que las etiquetas se vean aunque la tarea esté completa */
+.taskBar[data-progress="100"]::after,
+.subtaskBar[data-progress="100"]::after {
+  content: "100%" !important;
+  display: flex !important;
+  right: -40px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.taskBar[data-progress="0"]::after,
+.subtaskBar[data-progress="0"]::after {
+  content: "0%" !important;
+  display: flex !important;
+  right: -40px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.taskBar:has(.taskComplete)::after {
+  right: -40px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.parentTask::after,
+.taskBar:has(~ .subtaskBar)::after,
+.taskBar:first-child::after {
+  right: -50px !important;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 40 !important;
+}
+
+.taskBar::after,
+.subtaskBar::after {
+  z-index: 40 !important;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.subtaskBar::after {
+  right: -40px !important;
+  position: absolute !important;
+  min-width: 30px !important;
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 999 !important;
+}
+
+.subtaskBar {
+  overflow: visible !important;
+}
+
+.subtaskContent,
+.subtaskLabel {
+  overflow: hidden !important;
+}
+
+.subtaskBar[data-progress]::after {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  right: -40px !important;
+}

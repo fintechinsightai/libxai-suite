@@ -1,0 +1,136 @@
+/* Variables compartidas independientes del tema */
+:root {
+  /* Tamaños y espaciados */
+  --header-height-main: 50px;
+  --header-height-sub: 40px;
+  --sidebar-width: 300px;
+
+  /* Bordes y radios */
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 999px;
+
+  /* Z-index */
+  --z-index-header-main: 30;
+  --z-index-header-sub: 20;
+  --z-index-sidebar: 10;
+  --z-index-modal: 1000;
+
+  /* Animaciones */
+  --transition-fast: 0.2s;
+  --transition-normal: 0.3s;
+
+  /* Breakpoints para responsive */
+  --breakpoint-xl: 1280px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-md-lg: 850px;
+  --breakpoint-md: 768px;
+  --breakpoint-sm: 640px;
+  --breakpoint-xs: 480px;
+}
+
+/* Tema oscuro (por defecto) */
+:root {
+  /* Colores principales */
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #111827;
+  --color-bg-accent: #1e293b;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-accent-blue: #3b82f6;
+  --color-accent-blue-light: #38bdf8;
+  --color-accent-green: #10b981;
+  --color-accent-orange: #f97316;
+  --color-accent-purple: #4f46e5;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Tema claro */
+[data-theme="light"] {
+  /* Colores principales */
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #f1f5f9;
+  --color-bg-accent: #e2e8f0;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+  --color-border: #cbd5e1;
+  --color-border-light: #e2e8f0;
+  --color-accent-blue: #2563eb;
+  --color-accent-blue-light: #0ea5e9;
+  --color-accent-green: #059669;
+  --color-accent-orange: #ea580c;
+  --color-accent-purple: #4338ca;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 10px 25px rgba(0, 0, 0, 0.12);
+
+  /* Colores específicos del Gantt para tema claro */
+  --gantt-timeline-bg: #f1f5f9;
+  --gantt-grid-line: #cbd5e1;
+  --gantt-header-bg: #e2e8f0;
+  --gantt-today-line: rgba(220, 38, 38, 0.7);
+  --gantt-weekend-bg: rgba(226, 232, 240, 0.5);
+}
+
+/* Colores específicos del Gantt para tema oscuro (por defecto) */
+:root {
+  --gantt-timeline-bg: #111827;
+  --gantt-grid-line: #334155;
+  --gantt-header-bg: #1e293b;
+  --gantt-today-line: rgba(220, 38, 38, 0.7);
+  --gantt-weekend-bg: rgba(30, 41, 59, 0.5);
+}
+
+/* Modificar variables para tablets */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 250px;
+    --header-height-main: 48px;
+    --header-height-sub: 38px;
+  }
+}
+
+/* Modificar variables para tablets pequeñas */
+@media (max-width: 850px) {
+  :root {
+    --sidebar-width: 200px;
+    --header-height-main: 46px;
+    --header-height-sub: 36px;
+  }
+}
+
+/* Modificar variables para móviles en horizontal */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 100%;
+    --header-height-main: auto;
+    --header-height-sub: auto;
+  }
+}
+
+/* Modificar variables para móviles */
+@media (max-width: 640px) {
+  :root {
+    /* Los ajustes específicos para móviles permanecen igual */
+  }
+}
+
+/* Modificar variables para móviles pequeños */
+@media (max-width: 480px) {
+  :root {
+    /* Los ajustes específicos para móviles pequeños permanecen igual */
+  }
+}

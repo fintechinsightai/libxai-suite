@@ -1,0 +1,75 @@
+/* src/styles/ThemeToggle.module.css */
+.themeToggleBtn {
+  background-color: var(--color-bg-accent);
+  border: 1px solid var(--color-border-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: var(--border-radius-xl);
+  color: var(--color-text-primary);
+  transition: all var(--transition-fast) ease;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.themeToggleBtn:hover {
+  background-color: var(--color-bg-secondary);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
+}
+
+.themeToggleBtn:active {
+  transform: scale(0.95);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  transition: transform var(--transition-fast) ease;
+}
+
+.themeToggleBtn:hover .icon {
+  transform: rotate(12deg);
+}
+
+/* Animación al cambiar el tema */
+@keyframes iconFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.icon {
+  animation: iconFadeIn 0.3s ease forwards;
+}
+
+/* Clases para accesibilidad */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Estilos específicos para tema claro/oscuro */
+[data-theme="light"] .themeToggleBtn {
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="dark"] .themeToggleBtn {
+  box-shadow: none;
+}
