@@ -1,202 +1,202 @@
 # 🚀 LibXAI Suite
-### AI-Powered Gantt Chart Generator for Intelligent Project Management
+### Generador de Diagramas de Gantt con Inteligencia Artificial para Gestión Inteligente de Proyectos
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Licencia MIT](https://img.shields.io/badge/Licencia-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-4.4-purple.svg)](https://vitejs.dev/)
 
-## 🎯 Overview
+## 🎯 Descripción General
 
-LibXAI Suite is a cutting-edge, AI-powered Gantt chart library that revolutionizes project management through intelligent automation and predictive analytics. Built with modern web technologies, it provides developers with powerful tools to create smart, adaptive project timelines.
+LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada por inteligencia artificial, que revoluciona la gestión de proyectos a través de automatización inteligente y análisis predictivo. Construida con tecnologías web modernas, proporciona a los desarrolladores herramientas poderosas para crear cronogramas de proyectos inteligentes y adaptativos.
 
-## ✨ Key Features
+## ✨ Características Principales
 
-### 🤖 AI-Powered Intelligence
-- **Smart Task Scheduling**: Automatically optimize task sequences using AI algorithms
-- **Predictive Analytics**: Forecast project completion dates and potential bottlenecks
-- **Intelligent Resource Allocation**: AI-driven resource distribution and conflict resolution
-- **Risk Assessment**: Automated identification of project risks and mitigation suggestions
+### 🤖 Inteligencia Artificial Avanzada
+- **Programación Inteligente de Tareas**: Optimiza automáticamente las secuencias de tareas usando algoritmos de IA
+- **Análisis Predictivo**: Predice fechas de finalización de proyectos y posibles cuellos de botella
+- **Asignación Inteligente de Recursos**: Distribución de recursos y resolución de conflictos impulsada por IA
+- **Evaluación de Riesgos**: Identificación automatizada de riesgos del proyecto y sugerencias de mitigación
 
-### 📊 Advanced Gantt Capabilities
-- **Interactive Timeline**: Drag-and-drop task management with real-time updates
-- **Dependency Management**: Intelligent task relationship mapping
-- **Critical Path Analysis**: Automated identification of project-critical tasks
-- **Multi-Project Views**: Manage multiple projects with unified dashboards
+### 📊 Capacidades Avanzadas de Gantt
+- **Cronograma Interactivo**: Gestión de tareas con arrastrar y soltar y actualizaciones en tiempo real
+- **Gestión de Dependencias**: Mapeo inteligente de relaciones entre tareas
+- **Análisis de Ruta Crítica**: Identificación automatizada de tareas críticas del proyecto
+- **Vistas Multi-proyecto**: Gestiona múltiples proyectos con paneles unificados
 
-### 🎨 Modern UX/UI
-- **Responsive Design**: Works seamlessly across desktop, tablet, and mobile
-- **Dark/Light Themes**: Customizable appearance modes
-- **Real-time Collaboration**: Multi-user editing with live synchronization
-- **Export Capabilities**: PDF, PNG, and Excel export functionality
+### 🎨 UX/UI Moderna
+- **Diseño Responsivo**: Funciona perfectamente en escritorio, tablet y móvil
+- **Temas Oscuro/Claro**: Modos de apariencia personalizables
+- **Colaboración en Tiempo Real**: Edición multiusuario con sincronización en vivo
+- **Capacidades de Exportación**: Exportación a PDF, PNG y Excel
 
-## 🛠️ Tech Stack
+## 🛠️ Stack Tecnológico
 
 - **Frontend**: React 18.2 + TypeScript 5.0
-- **Build Tool**: Vite 4.4 for lightning-fast development
-- **Styling**: Modern CSS with CSS Modules
-- **AI Engine**: Custom algorithms for intelligent scheduling
-- **State Management**: React Context + Hooks pattern
-- **Testing**: Jest + React Testing Library
+- **Herramienta de Construcción**: Vite 4.4 para desarrollo ultrarrápido
+- **Estilos**: CSS moderno con CSS Modules
+- **Motor de IA**: Algoritmos personalizados para programación inteligente
+- **Gestión de Estado**: Patrón React Context + Hooks
+- **Pruebas**: Jest + React Testing Library
 
-## 📦 Installation
+## 📦 Instalación
 
 ```bash
-# Install via npm
+# Instalar vía npm
 npm install libxai-suite
 
-# Install via yarn
+# Instalar vía yarn
 yarn add libxai-suite
 
-# Install via pnpm
+# Instalar vía pnpm
 pnpm add libxai-suite
 ```
 
-## 🚀 Quick Start
+## 🚀 Inicio Rápido
 
 ```typescript
 import { GanttChart, AIScheduler } from 'libxai-suite';
 
-const MyProject = () => {
-  const tasks = [
+const MiProyecto = () => {
+  const tareas = [
     {
       id: '1',
-      title: 'Project Planning',
-      start: '2025-06-01',
-      duration: 5,
-      dependencies: []
+      titulo: 'Planificación del Proyecto',
+      inicio: '2025-06-01',
+      duracion: 5,
+      dependencias: []
     },
     {
       id: '2', 
-      title: 'Development Phase',
-      start: '2025-06-06',
-      duration: 15,
-      dependencies: ['1']
+      titulo: 'Fase de Desarrollo',
+      inicio: '2025-06-06',
+      duracion: 15,
+      dependencias: ['1']
     }
   ];
 
   return (
     <GanttChart
-      tasks={tasks}
+      tasks={tareas}
       aiEnabled={true}
-      onTaskUpdate={(updatedTasks) => {
-        // Handle AI-optimized task updates
-        console.log('AI optimized tasks:', updatedTasks);
+      onTaskUpdate={(tareasActualizadas) => {
+        // Manejar actualizaciones de tareas optimizadas por IA
+        console.log('Tareas optimizadas por IA:', tareasActualizadas);
       }}
     />
   );
 };
 ```
 
-## 🔧 Development Setup
+## 🔧 Configuración de Desarrollo
 
 ```bash
-# Clone the repository
+# Clonar el repositorio
 git clone https://github.com/fintechinsightai/libxai-suite.git
 
-# Navigate to project directory
+# Navegar al directorio del proyecto
 cd libxai-suite
 
-# Install dependencies
+# Instalar dependencias
 npm install
 
-# Start development server
+# Iniciar servidor de desarrollo
 npm run dev
 
-# Build for production
+# Construir para producción
 npm run build
 
-# Run tests
+# Ejecutar pruebas
 npm run test
 ```
 
-## 📈 AI Features in Detail
+## 📈 Características de IA en Detalle
 
-### Smart Scheduling Algorithm
-Our proprietary AI engine analyzes:
-- Historical project data
-- Team performance metrics
-- Resource availability patterns
-- External dependencies and constraints
+### Algoritmo de Programación Inteligente
+Nuestro motor de IA propietario analiza:
+- Datos históricos de proyectos
+- Métricas de rendimiento del equipo
+- Patrones de disponibilidad de recursos
+- Dependencias externas y restricciones
 
-### Predictive Analytics
-- **Timeline Forecasting**: Predict accurate completion dates
-- **Bottleneck Detection**: Identify potential delays before they occur
-- **Resource Optimization**: Suggest optimal team allocations
-- **Risk Mitigation**: Proactive identification of project risks
+### Análisis Predictivo
+- **Pronóstico de Cronograma**: Predice fechas de finalización precisas
+- **Detección de Cuellos de Botella**: Identifica posibles retrasos antes de que ocurran
+- **Optimización de Recursos**: Sugiere asignaciones óptimas de equipo
+- **Mitigación de Riesgos**: Identificación proactiva de riesgos del proyecto
 
-## 🎯 Use Cases
+## 🎯 Casos de Uso
 
-- **Software Development**: Sprint planning and release management
-- **Construction Projects**: Timeline optimization and resource scheduling
-- **Marketing Campaigns**: Multi-channel campaign coordination
-- **Research Projects**: Academic and corporate research planning
-- **Event Planning**: Complex event coordination and logistics
+- **Desarrollo de Software**: Planificación de sprints y gestión de releases
+- **Proyectos de Construcción**: Optimización de cronogramas y programación de recursos
+- **Campañas de Marketing**: Coordinación de campañas multicanal
+- **Proyectos de Investigación**: Planificación de investigación académica y corporativa
+- **Planificación de Eventos**: Coordinación y logística de eventos complejos
 
-## 📊 Performance Metrics
+## 📊 Métricas de Rendimiento
 
-- ⚡ **Fast Rendering**: Handles 1000+ tasks smoothly
-- 🔄 **Real-time Updates**: Sub-100ms response time
-- 📱 **Mobile Optimized**: 95+ Lighthouse performance score
-- 🌐 **Cross-browser**: Supports all modern browsers
+- ⚡ **Renderizado Rápido**: Maneja más de 1000 tareas sin problemas
+- 🔄 **Actualizaciones en Tiempo Real**: Tiempo de respuesta inferior a 100ms
+- 📱 **Optimizado para Móviles**: Puntuación de rendimiento Lighthouse 95+
+- 🌐 **Multi-navegador**: Compatible con todos los navegadores modernos
 
-## 🗺️ Roadmap
+## 🗺️ Hoja de Ruta
 
-### Version 2.0 (Q3 2025)
-- [ ] Machine Learning integration for pattern recognition
-- [ ] Advanced AI-powered resource optimization
-- [ ] Integration with popular project management tools
-- [ ] Mobile app companion
+### Versión 2.0 (Q3 2025)
+- [ ] Integración de Machine Learning para reconocimiento de patrones
+- [ ] Optimización avanzada de recursos impulsada por IA
+- [ ] Integración con herramientas populares de gestión de proyectos
+- [ ] Aplicación móvil complementaria
 
-### Version 2.1 (Q4 2025)
-- [ ] Natural Language Processing for task creation
-- [ ] Automated status reporting
-- [ ] Advanced analytics dashboard
-- [ ] Enterprise SSO integration
+### Versión 2.1 (Q4 2025)
+- [ ] Procesamiento de Lenguaje Natural para creación de tareas
+- [ ] Reportes de estado automatizados
+- [ ] Panel de análisis avanzado
+- [ ] Integración SSO empresarial
 
-## 🤝 Contributing
+## 🤝 Contribuir
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+¡Damos la bienvenida a las contribuciones! Por favor, consulta nuestras [Guías de Contribución](CONTRIBUTING.md) para más detalles.
 
 ```bash
-# Fork the repository
-# Create a feature branch
-git checkout -b feature/amazing-feature
+# Hacer fork del repositorio
+# Crear una rama de característica
+git checkout -b feature/caracteristica-increible
 
-# Commit your changes
-git commit -m 'Add amazing feature'
+# Hacer commit de los cambios
+git commit -m 'Agregar característica increíble'
 
-# Push to the branch
-git push origin feature/amazing-feature
+# Push a la rama
+git push origin feature/caracteristica-increible
 
-# Open a Pull Request
+# Abrir un Pull Request
 ```
 
-## 📄 License
+## 📄 Licencia
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Este proyecto está licenciado bajo la Licencia MIT - consulta el archivo [LICENSE](LICENSE) para más detalles.
 
-## 📞 Contact & Support
+## 📞 Contacto y Soporte
 
-- **Developer**: fintechinsightai
+- **Desarrollador**: fintechinsightai
 - **Email**: hello@libxai.com
-- **Website**: [libxai.com](https://libxai.com)
+- **Sitio Web**: [libxai.com](https://libxai.com)
 - **Issues**: [GitHub Issues](https://github.com/fintechinsightai/libxai-suite/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/fintechinsightai/libxai-suite/discussions)
+- **Discusiones**: [GitHub Discussions](https://github.com/fintechinsightai/libxai-suite/discussions)
 
-## 🌟 Acknowledgments
+## 🌟 Reconocimientos
 
-- Built with ❤️ by the LibXAI team
-- Inspired by modern project management needs
-- Community feedback and contributions
+- Construido con ❤️ por el equipo LibXAI
+- Inspirado por las necesidades modernas de gestión de proyectos
+- Comentarios y contribuciones de la comunidad
 
 ---
 
-### 📊 Project Stats
+### 📊 Estadísticas del Proyecto
 
 ![GitHub stars](https://img.shields.io/github/stars/fintechinsightai/libxai-suite?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/fintechinsightai/libxai-suite?style=social)
 ![GitHub issues](https://img.shields.io/github/issues/fintechinsightai/libxai-suite)
 ![GitHub contributors](https://img.shields.io/github/contributors/fintechinsightai/libxai-suite)
 
-**Made with 🤖 AI and ❤️ Human creativity**
+**Hecho con 🤖 IA y ❤️ creatividad humana**
