@@ -2,7 +2,7 @@
 ### Generador de Diagramas de Gantt con Inteligencia Artificial para Gestión Inteligente de Proyectos
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/project-screenshot.png" alt="LibXAI Suite - Vista del Proyecto" width="100%">
+  <img src="./assets/project-screenshot.jpg" alt="LibXAI Suite - Vista del Proyecto" width="100%">
 </p>
 
 <div align="center">
