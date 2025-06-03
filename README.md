@@ -89,10 +89,31 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 
 ---
 
-## 📦 Instalación Rápida
+## 📦 Instalación y Configuración
+
+### **🚀 Clonar y ejecutar localmente:**
 
 ```bash
-# 🎯 Instalar vía npm
+# 📂 Clonar el repositorio
+git clone https://github.com/libxai/ganttAI.git
+
+# 📁 Navegar al directorio
+cd ganttAI
+
+# 📦 Instalar dependencias
+npm install
+
+# 🚀 Iniciar servidor de desarrollo
+npm run dev
+
+# 🏗️ Construir para producción
+npm run build
+```
+
+### **📋 Como librería (próximamente en NPM):**
+
+```bash
+# 🎯 Instalar vía npm (cuando esté publicada)
 npm install libxai-suite
 
 # 🧶 Instalar vía yarn
@@ -263,6 +284,9 @@ npm run build
 
 # 🧪 Ejecutar pruebas
 npm run test
+
+# 👀 Preview de producción
+npm run preview
 ```
 
 ---
