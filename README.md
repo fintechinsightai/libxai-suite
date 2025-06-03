@@ -1,8 +1,9 @@
 # 🚀 LibXAI Suite
+
 ### Generador de Diagramas de Gantt con Inteligencia Artificial para Gestión Inteligente de Proyectos
 
 <p align="center">
-  <img src="./assets/project-screenshot.jpg" alt="LibXAI Suite - Vista del Proyecto" width="100%">
+  <img src="./assets/project-screenshot.jpg" alt="LibXAI Suite - Vista del Proyecto" width="90%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
 </p>
 
 <div align="center">
@@ -37,21 +38,24 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 ## ✨ Características Principales
 
 ### 🤖 **Inteligencia Artificial Avanzada**
+
 ```
 🎯 Programación Inteligente de Tareas    → Optimización automática de secuencias
-📊 Análisis Predictivo                   → Predicción de fechas y cuellos de botella  
+📊 Análisis Predictivo                   → Predicción de fechas y cuellos de botella
 🔄 Asignación Inteligente de Recursos    → Distribución IA y resolución de conflictos
 ⚠️ Evaluación de Riesgos                → Identificación automatizada de riesgos
 ```
 
 ### 📊 **Capacidades Avanzadas de Gantt**
+
 - **🎭 Cronograma Interactivo**: Gestión con arrastrar y soltar + actualizaciones en tiempo real
 - **🔗 Gestión de Dependencias**: Mapeo inteligente de relaciones entre tareas
 - **🎯 Análisis de Ruta Crítica**: Identificación automatizada de tareas críticas
 - **🌐 Vistas Multi-proyecto**: Gestiona múltiples proyectos con paneles unificados
 
 ### 🎨 **UX/UI Moderna**
-- ✅ **Diseño Responsivo**: Perfecto en escritorio, tablet y móvil  
+
+- ✅ **Diseño Responsivo**: Perfecto en escritorio, tablet y móvil
 - 🌓 **Temas Oscuro/Claro**: Modos de apariencia personalizables
 - 👥 **Colaboración en Tiempo Real**: Edición multiusuario con sincronización en vivo
 - 📤 **Capacidades de Exportación**: PDF, PNG y Excel
@@ -65,6 +69,7 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 <td width="50%">
 
 **🎨 Frontend**
+
 - React 18.2 + TypeScript 5.0
 - Vite 4.4 para desarrollo ultrarrápido
 - CSS moderno con CSS Modules
@@ -73,8 +78,9 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 <td width="50%">
 
 **🤖 Backend IA**
+
 - Algoritmos personalizados para programación
-- Patrón React Context + Hooks  
+- Patrón React Context + Hooks
 - Jest + React Testing Library
 
 </td>
@@ -89,7 +95,7 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 # 🎯 Instalar vía npm
 npm install libxai-suite
 
-# 🧶 Instalar vía yarn  
+# 🧶 Instalar vía yarn
 yarn add libxai-suite
 
 # ⚡ Instalar vía pnpm
@@ -99,34 +105,34 @@ pnpm add libxai-suite
 ## 🚀 Ejemplo de Uso
 
 ```typescript
-import { GanttChart, AIScheduler } from 'libxai-suite';
+import { GanttChart, AIScheduler } from "libxai-suite";
 
 const MiProyecto = () => {
   const tareas = [
     {
-      id: '1',
-      titulo: 'Planificación Estratégica',
-      inicio: '2025-06-01',
+      id: "1",
+      titulo: "Planificación Estratégica",
+      inicio: "2025-06-01",
       duracion: 5,
       progreso: 100,
-      dependencias: []
+      dependencias: [],
     },
     {
-      id: '2', 
-      titulo: 'Desarrollo Técnico',
-      inicio: '2025-06-06',
+      id: "2",
+      titulo: "Desarrollo Técnico",
+      inicio: "2025-06-06",
       duracion: 15,
       progreso: 30,
-      dependencias: ['1']
+      dependencias: ["1"],
     },
     {
-      id: '3',
-      titulo: 'Pruebas y QA',
-      inicio: '2025-07-01', 
+      id: "3",
+      titulo: "Pruebas y QA",
+      inicio: "2025-07-01",
       duracion: 10,
       progreso: 25,
-      dependencias: ['2']
-    }
+      dependencias: ["2"],
+    },
   ];
 
   return (
@@ -136,10 +142,10 @@ const MiProyecto = () => {
       theme="dark"
       showProgress={true}
       onTaskUpdate={(tareasOptimizadas) => {
-        console.log('🤖 Tareas optimizadas por IA:', tareasOptimizadas);
+        console.log("🤖 Tareas optimizadas por IA:", tareasOptimizadas);
       }}
       onAIAssist={(sugerencias) => {
-        console.log('💡 Sugerencias IA:', sugerencias);
+        console.log("💡 Sugerencias IA:", sugerencias);
       }}
     />
   );
@@ -156,12 +162,12 @@ const MiProyecto = () => {
 
 </div>
 
-| Funcionalidad | Descripción | Beneficio |
-|--------------|-------------|-----------|
-| 📊 **Análisis Histórico** | Analiza datos de proyectos pasados | Predicciones más precisas |
-| ⚡ **Optimización en Tiempo Real** | Ajustes automáticos de cronograma | Eficiencia maximizada |
-| 🎯 **Detección de Patrones** | Identifica tendencias y bloqueos | Prevención proactiva |
-| 🔮 **Pronóstico Inteligente** | Predice fechas de finalización | Planificación confiable |
+| Funcionalidad                      | Descripción                        | Beneficio                 |
+| ---------------------------------- | ---------------------------------- | ------------------------- |
+| 📊 **Análisis Histórico**          | Analiza datos de proyectos pasados | Predicciones más precisas |
+| ⚡ **Optimización en Tiempo Real** | Ajustes automáticos de cronograma  | Eficiencia maximizada     |
+| 🎯 **Detección de Patrones**       | Identifica tendencias y bloqueos   | Prevención proactiva      |
+| 🔮 **Pronóstico Inteligente**      | Predice fechas de finalización     | Planificación confiable   |
 
 ---
 
@@ -172,8 +178,9 @@ const MiProyecto = () => {
 <td width="33%">
 
 ### 💻 **Desarrollo Software**
+
 - Planificación de sprints
-- Gestión de releases  
+- Gestión de releases
 - Seguimiento de bugs
 - Integración continua
 
@@ -181,6 +188,7 @@ const MiProyecto = () => {
 <td width="33%">
 
 ### 🏗️ **Proyectos Construcción**
+
 - Optimización cronogramas
 - Programación recursos
 - Control de calidad
@@ -190,6 +198,7 @@ const MiProyecto = () => {
 <td width="33%">
 
 ### 📱 **Campañas Marketing**
+
 - Coordinación multicanal
 - Lanzamientos productos
 - Eventos corporativos
@@ -205,12 +214,12 @@ const MiProyecto = () => {
 
 <div align="center">
 
-| Métrica | Valor | Estado |
-|---------|-------|--------|
-| 🚀 **Renderizado** | >1000 tareas | ✅ Optimizado |
-| ⚡ **Tiempo Respuesta** | <100ms | ✅ Ultra-rápido |
-| 📱 **Lighthouse Score** | 95+ | ✅ Excelente |
-| 🌐 **Compatibilidad** | Todos los navegadores | ✅ Universal |
+| Métrica                 | Valor                 | Estado          |
+| ----------------------- | --------------------- | --------------- |
+| 🚀 **Renderizado**      | >1000 tareas          | ✅ Optimizado   |
+| ⚡ **Tiempo Respuesta** | <100ms                | ✅ Ultra-rápido |
+| 📱 **Lighthouse Score** | 95+                   | ✅ Excelente    |
+| 🌐 **Compatibilidad**   | Todos los navegadores | ✅ Universal    |
 
 </div>
 
@@ -219,12 +228,14 @@ const MiProyecto = () => {
 ## 🗺️ **Hoja de Ruta**
 
 ### 🎯 **Versión 2.0** (Q3 2025)
+
 - [ ] 🧠 Integración Machine Learning para reconocimiento de patrones
-- [ ] 🔄 Optimización avanzada de recursos impulsada por IA  
+- [ ] 🔄 Optimización avanzada de recursos impulsada por IA
 - [ ] 🔗 Integración con Jira, Asana, Monday.com
 - [ ] 📱 Aplicación móvil complementaria iOS/Android
 
 ### 🚀 **Versión 2.1** (Q4 2025)
+
 - [ ] 🗣️ Procesamiento de Lenguaje Natural para creación de tareas
 - [ ] 📊 Reportes de estado automatizados con insights IA
 - [ ] 📈 Panel de análisis avanzado con ML
@@ -236,12 +247,12 @@ const MiProyecto = () => {
 
 ```bash
 # 📂 Clonar el repositorio
-git clone https://github.com/fintechinsightai/libxai-suite.git
+git clone https://github.com/libxai/ganttAI.git
 
 # 📁 Navegar al directorio
-cd libxai-suite
+cd ganttAI
 
-# 📦 Instalar dependencias  
+# 📦 Instalar dependencias
 npm install
 
 # 🚀 Iniciar servidor desarrollo
@@ -280,13 +291,13 @@ git push origin feature/caracteristica-increible
 
 <div align="center">
 
-| Canal | Información |
-|-------|-------------|
-| 👨‍💻 **Desarrollador** | fintechinsightai |  
-| 📧 **Email** | hello@libxai.com |
-| 🌐 **Sitio Web** | [libxai.com](https://libxai.com) |
-| 🐛 **Issues** | [GitHub Issues](https://github.com/fintechinsightai/libxai-suite/issues) |
-| 💬 **Discusiones** | [GitHub Discussions](https://github.com/fintechinsightai/libxai-suite/discussions) |
+| Canal                | Información                                                         |
+| -------------------- | ------------------------------------------------------------------- |
+| 👨‍💻 **Desarrollador** | fintechinsightai                                                    |
+| 📧 **Email**         | hello@libxai.com                                                    |
+| 🌐 **Sitio Web**     | [libxai.com](https://libxai.com)                                    |
+| 🐛 **Issues**        | [GitHub Issues](https://github.com/libxai/ganttAI/issues)           |
+| 💬 **Discusiones**   | [GitHub Discussions](https://github.com/libxai/ganttAI/discussions) |
 
 </div>
 
@@ -296,10 +307,10 @@ git push origin feature/caracteristica-increible
 
 <div align="center">
 
-![GitHub stars](https://img.shields.io/github/stars/fintechinsightai/libxai-suite?style=for-the-badge&logo=github&color=FFD700)
-![GitHub forks](https://img.shields.io/github/forks/fintechinsightai/libxai-suite?style=for-the-badge&logo=github&color=32CD32)
-![GitHub issues](https://img.shields.io/github/issues/fintechinsightai/libxai-suite?style=for-the-badge&logo=github&color=FF6B6B)
-![GitHub contributors](https://img.shields.io/github/contributors/fintechinsightai/libxai-suite?style=for-the-badge&logo=github&color=4ECDC4)
+![GitHub stars](https://img.shields.io/github/stars/libxai/ganttAI?style=for-the-badge&logo=github&color=FFD700)
+![GitHub forks](https://img.shields.io/github/forks/libxai/ganttAI?style=for-the-badge&logo=github&color=32CD32)
+![GitHub issues](https://img.shields.io/github/issues/libxai/ganttAI?style=for-the-badge&logo=github&color=FF6B6B)
+![GitHub contributors](https://img.shields.io/github/contributors/libxai/ganttAI?style=for-the-badge&logo=github&color=4ECDC4)
 
 </div>
 
