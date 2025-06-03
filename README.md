@@ -1,14 +1,14 @@
 # 🚀 LibXAI Suite
 
-### Generador de Diagramas de Gantt con Inteligencia Artificial para Gestión Inteligente de Proyectos
+### AI-Powered Gantt Chart Generator for Smart Project Management
 
 <p align="center">
-  <img src="./src/assets/project-screenshot.jpg" alt="LibXAI Suite - Vista del Proyecto" width="90%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+  <img src="./src/assets/project-screenshot.jpg" alt="LibXAI Suite - Project View" width="90%" style="border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
 </p>
 
 <div align="center">
 
-[![Licencia MIT](https://img.shields.io/badge/Licencia-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)
 [![React](https://img.shields.io/badge/React-19.0.0-61DAFB.svg?style=for-the-badge&logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6.svg?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-6.3-646CFF.svg?style=for-the-badge&logo=vite)](https://vitejs.dev/)
@@ -17,52 +17,52 @@
 
 ---
 
-## 🌟 Vista Previa de la Aplicación
+## 🌟 Application Preview
 
-> **🎯 Gestión de Proyectos Redefinida**: Experimenta cronogramas inteligentes con seguimiento automático de progreso, análisis predictivo en tiempo real y asistente IA integrado.
+> **🎯 Project Management Redefined**: Experience intelligent timelines with automatic progress tracking, real-time predictive analytics, and integrated AI assistant.
 
-### 🖥️ Características Visuales Destacadas
+### 🖥️ Featured Visual Characteristics
 
-- **📊 Cronograma Inteligente**: Visualización clara de mayo a julio 2025 con progreso en tiempo real
-- **🎨 Diseño Moderno**: Interfaz oscura profesional con elementos coloridos para mejor experiencia de usuario
-- **📈 Indicadores de Progreso**: Barras de progreso dinámicas (100%, 30%, 25%, 5%, 0%, 10%)
-- **🤖 Asistente IA**: Panel lateral integrado para optimización automática de tareas
-- **⚡ EDT Inteligente**: Estructura de Desglose del Trabajo con jerarquía visual
-
----
-
-## 🎯 Descripción General
-
-LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada por inteligencia artificial, que **revoluciona la gestión de proyectos** a través de automatización inteligente y análisis predictivo. Construida con tecnologías web modernas, proporciona a los desarrolladores herramientas poderosas para crear cronogramas de proyectos inteligentes y adaptativos.
-
-## ✨ Características Principales
-
-### 🤖 **Inteligencia Artificial Avanzada**
-
-```
-🎯 Programación Inteligente de Tareas    → Optimización automática de secuencias
-📊 Análisis Predictivo                   → Predicción de fechas y cuellos de botella
-🔄 Asignación Inteligente de Recursos    → Distribución IA y resolución de conflictos
-⚠️ Evaluación de Riesgos                → Identificación automatizada de riesgos
-```
-
-### 📊 **Capacidades Avanzadas de Gantt**
-
-- **🎭 Cronograma Interactivo**: Gestión con arrastrar y soltar + actualizaciones en tiempo real
-- **🔗 Gestión de Dependencias**: Mapeo inteligente de relaciones entre tareas
-- **🎯 Análisis de Ruta Crítica**: Identificación automatizada de tareas críticas
-- **🌐 Vistas Multi-proyecto**: Gestiona múltiples proyectos con paneles unificados
-
-### 🎨 **Experiencia de Usuario Moderna**
-
-- ✅ **Diseño Responsivo**: Perfecto en escritorio, tablet y móvil
-- 🌓 **Temas Oscuro/Claro**: Modos de apariencia personalizables
-- 👥 **Colaboración en Tiempo Real**: Edición multiusuario con sincronización en vivo
-- 📤 **Capacidades de Exportación**: PDF, PNG y Excel
+- **📊 Smart Timeline**: Clear visualization from May to July 2025 with real-time progress
+- **🎨 Modern Design**: Professional dark interface with colorful elements for better UX
+- **📈 Progress Indicators**: Dynamic progress bars (100%, 30%, 25%, 5%, 0%, 10%)
+- **🤖 AI Assistant**: Integrated side panel for automatic task optimization
+- **⚡ Smart WBS**: Work Breakdown Structure with visual hierarchy
 
 ---
 
-## 🛠️ Pila Tecnológica
+## 🎯 Overview
+
+LibXAI Suite is a cutting-edge AI-powered Gantt chart library that **revolutionizes project management** through intelligent automation and predictive analytics. Built with modern web technologies, it provides developers with powerful tools to create smart and adaptive project timelines.
+
+## ✨ Key Features
+
+### 🤖 **Advanced Artificial Intelligence**
+
+```
+🎯 Smart Task Scheduling    → Automatic sequence optimization
+📊 Predictive Analytics     → Date prediction and bottleneck identification
+🔄 Intelligent Resource Allocation    → AI distribution and conflict resolution
+⚠️ Risk Assessment         → Automated risk identification
+```
+
+### 📊 **Advanced Gantt Capabilities**
+
+- **🎭 Interactive Timeline**: Drag-and-drop management + real-time updates
+- **🔗 Dependency Management**: Smart mapping of task relationships
+- **🎯 Critical Path Analysis**: Automated identification of critical tasks
+- **🌐 Multi-project Views**: Manage multiple projects with unified dashboards
+
+### 🎨 **Modern UX/UI**
+
+- ✅ **Responsive Design**: Perfect on desktop, tablet, and mobile
+- 🌓 **Dark/Light Themes**: Customizable appearance modes
+- 👥 **Real-time Collaboration**: Multi-user editing with live synchronization
+- 📤 **Export Capabilities**: PDF, PNG, and Excel
+
+---
+
+## 🛠️ Tech Stack
 
 <table>
 <tr>
@@ -71,16 +71,16 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 **🎨 Frontend**
 
 - React 19.0 + TypeScript 5.7
-- Vite 6.3 para desarrollo ultrarrápido
-- CSS moderno con Módulos CSS
+- Vite 6.3 for ultra-fast development
+- Modern CSS with CSS Modules
 
 </td>
 <td width="50%">
 
-**🤖 Backend IA**
+**🤖 AI Backend**
 
-- Algoritmos personalizados para programación
-- Patrón React Context + Hooks
+- Custom algorithms for scheduling
+- React Context + Hooks pattern
 - Jest + React Testing Library
 
 </td>
@@ -89,84 +89,84 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 
 ---
 
-## 📦 Instalación y Configuración
+## 📦 Installation and Setup
 
-### **🚀 Clonar y ejecutar localmente:**
+### **🚀 Clone and run locally:**
 
 ```bash
-# 📂 Clonar el repositorio
+# 📂 Clone the repository
 git clone https://github.com/libxai/ganttAI.git
 
-# 📁 Navegar al directorio
+# 📁 Navigate to directory
 cd ganttAI
 
-# 📦 Instalar dependencias
+# 📦 Install dependencies
 npm install
 
-# 🚀 Iniciar servidor de desarrollo
+# 🚀 Start development server
 npm run dev
 
-# 🏗️ Construir para producción
+# 🏗️ Build for production
 npm run build
 ```
 
-### **📋 Como librería (próximamente en NPM):**
+### **📋 As a library (coming soon to NPM):**
 
 ```bash
-# 🎯 Instalar vía npm (cuando esté publicada)
+# 🎯 Install via npm (when published)
 npm install libxai-suite
 
-# 🧶 Instalar vía yarn
+# 🧶 Install via yarn
 yarn add libxai-suite
 
-# ⚡ Instalar vía pnpm
+# ⚡ Install via pnpm
 pnpm add libxai-suite
 ```
 
-## 🚀 Ejemplo de Uso
+## 🚀 Usage Example
 
 ```typescript
 import { GanttChart, AIScheduler } from "libxai-suite";
 
-const MiProyecto = () => {
-  const tareas = [
+const MyProject = () => {
+  const tasks = [
     {
       id: "1",
-      titulo: "Planificación Estratégica",
-      inicio: "2025-06-01",
-      duracion: 5,
-      progreso: 100,
-      dependencias: [],
+      title: "Strategic Planning",
+      start: "2025-06-01",
+      duration: 5,
+      progress: 100,
+      dependencies: [],
     },
     {
       id: "2",
-      titulo: "Desarrollo Técnico",
-      inicio: "2025-06-06",
-      duracion: 15,
-      progreso: 30,
-      dependencias: ["1"],
+      title: "Technical Development",
+      start: "2025-06-06",
+      duration: 15,
+      progress: 30,
+      dependencies: ["1"],
     },
     {
       id: "3",
-      titulo: "Pruebas y Control de Calidad",
-      inicio: "2025-07-01",
-      duracion: 10,
-      progreso: 25,
-      dependencias: ["2"],
+      title: "Testing and QA",
+      start: "2025-07-01",
+      duration: 10,
+      progress: 25,
+      dependencies: ["2"],
     },
   ];
 
   return (
     <GanttChart
-      tasks={tareas}
+      tasks={tasks}
       aiEnabled={true}
       theme="dark"
       showProgress={true}
-      onTaskUpdate={(tareasOptimizadas) => {
-        console.log("🤖 Tareas optimizadas por IA:", tareasOptimizadas);
+      onTaskUpdate={(optimizedTasks) => {
+        console.log("🤖 AI-optimized tasks:", optimizedTasks);
       }}
-      onAIAssist={(sugerencias) => {
-        console.log("💡 Sugerencias IA:", sugerencias);
+      onAIAssist={(suggestions) => {
+        console.log("💡 AI suggestions:", suggestions);
       }}
     />
   );
@@ -175,55 +175,55 @@ const MiProyecto = () => {
 
 ---
 
-## 📈 **Características de IA en Detalle**
+## 📈 **AI Features in Detail**
 
 <div align="center">
 
-### 🧠 **Motor de IA Propietario**
+### 🧠 **Proprietary AI Engine**
 
 </div>
 
-| Funcionalidad                      | Descripción                        | Beneficio                 |
-| ---------------------------------- | ---------------------------------- | ------------------------- |
-| 📊 **Análisis Histórico**          | Analiza datos de proyectos pasados | Predicciones más precisas |
-| ⚡ **Optimización en Tiempo Real** | Ajustes automáticos de cronograma  | Eficiencia maximizada     |
-| 🎯 **Detección de Patrones**       | Identifica tendencias y bloqueos   | Prevención proactiva      |
-| 🔮 **Pronóstico Inteligente**      | Predice fechas de finalización     | Planificación confiable   |
+| Functionality                 | Description                       | Benefit                   |
+| ----------------------------- | --------------------------------- | ------------------------- |
+| 📊 **Historical Analysis**    | Analyzes past project data        | More accurate predictions |
+| ⚡ **Real-time Optimization** | Automatic timeline adjustments    | Maximized efficiency      |
+| 🎯 **Pattern Detection**      | Identifies trends and bottlenecks | Proactive prevention      |
+| 🔮 **Smart Forecasting**      | Predicts completion dates         | Reliable planning         |
 
 ---
 
-## 🎯 **Casos de Uso Reales**
+## 🎯 **Real-world Use Cases**
 
 <table>
 <tr>
 <td width="33%">
 
-### 💻 **Desarrollo de Software**
+### 💻 **Software Development**
 
-- Planificación de sprints
-- Gestión de lanzamientos
-- Seguimiento de errores
-- Integración continua
-
-</td>
-<td width="33%">
-
-### 🏗️ **Proyectos de Construcción**
-
-- Optimización de cronogramas
-- Programación de recursos
-- Control de calidad
-- Gestión de proveedores
+- Sprint planning
+- Release management
+- Bug tracking
+- Continuous integration
 
 </td>
 <td width="33%">
 
-### 📱 **Campañas de Marketing**
+### 🏗️ **Construction Projects**
 
-- Coordinación multicanal
-- Lanzamientos de productos
-- Eventos corporativos
-- Análisis de ROI
+- Timeline optimization
+- Resource scheduling
+- Quality control
+- Vendor management
+
+</td>
+<td width="33%">
+
+### 📱 **Marketing Campaigns**
+
+- Multi-channel coordination
+- Product launches
+- Corporate events
+- ROI analysis
 
 </td>
 </tr>
@@ -231,110 +231,110 @@ const MiProyecto = () => {
 
 ---
 
-## ⚡ **Métricas de Rendimiento**
+## ⚡ **Performance Metrics**
 
 <div align="center">
 
-| Métrica                      | Valor                 | Estado          |
-| ---------------------------- | --------------------- | --------------- |
-| 🚀 **Renderizado**           | >1000 tareas          | ✅ Optimizado   |
-| ⚡ **Tiempo Respuesta**      | <100ms                | ✅ Ultra-rápido |
-| 📱 **Puntuación Lighthouse** | 95+                   | ✅ Excelente    |
-| 🌐 **Compatibilidad**        | Todos los navegadores | ✅ Universal    |
+| Metric                  | Value        | Status        |
+| ----------------------- | ------------ | ------------- |
+| 🚀 **Rendering**        | >1000 tasks  | ✅ Optimized  |
+| ⚡ **Response Time**    | <100ms       | ✅ Ultra-fast |
+| 📱 **Lighthouse Score** | 95+          | ✅ Excellent  |
+| 🌐 **Compatibility**    | All browsers | ✅ Universal  |
 
 </div>
 
 ---
 
-## 🗺️ **Hoja de Ruta**
+## 🗺️ **Roadmap**
 
-### 🎯 **Versión 2.0** (T3 2025)
+### 🎯 **Version 2.0** (Q3 2025)
 
-- [ ] 🧠 Integración de Aprendizaje Automático para reconocimiento de patrones
-- [ ] 🔄 Optimización avanzada de recursos impulsada por IA
-- [ ] 🔗 Integración con Jira, Asana, Monday.com
-- [ ] 📱 Aplicación móvil complementaria iOS/Android
+- [ ] 🧠 Machine Learning integration for pattern recognition
+- [ ] 🔄 Advanced AI-driven resource optimization
+- [ ] 🔗 Integration with Jira, Asana, Monday.com
+- [ ] 📱 Companion mobile app iOS/Android
 
-### 🚀 **Versión 2.1** (T4 2025)
+### 🚀 **Version 2.1** (Q4 2025)
 
-- [ ] 🗣️ Procesamiento de Lenguaje Natural para creación de tareas
-- [ ] 📊 Reportes de estado automatizados con perspectivas IA
-- [ ] 📈 Panel de análisis avanzado con ML
-- [ ] 🔐 Integración SSO empresarial (SAML, OAuth)
+- [ ] 🗣️ Natural Language Processing for task creation
+- [ ] 📊 Automated status reports with AI insights
+- [ ] 📈 Advanced analytics dashboard with ML
+- [ ] 🔐 Enterprise SSO integration (SAML, OAuth)
 
 ---
 
-## 🔧 **Configuración de Desarrollo**
+## 🔧 **Development Setup**
 
 ```bash
-# 📂 Clonar el repositorio
+# 📂 Clone the repository
 git clone https://github.com/libxai/ganttAI.git
 
-# 📁 Navegar al directorio
+# 📁 Navigate to directory
 cd ganttAI
 
-# 📦 Instalar dependencias
+# 📦 Install dependencies
 npm install
 
-# 🚀 Iniciar servidor de desarrollo
+# 🚀 Start development server
 npm run dev
 
-# 🏗️ Construir para producción
+# 🏗️ Build for production
 npm run build
 
-# 🧪 Ejecutar pruebas
+# 🧪 Run tests
 npm run test
 
-# 👀 Vista previa de producción
+# 👀 Production preview
 npm run preview
 ```
 
 ---
 
-## 🤝 **Contribuir**
+## 🤝 **Contributing**
 
-¡Damos la bienvenida a las contribuciones! Consulta nuestras [**Guías de Contribución**](CONTRIBUTING.md).
+We welcome contributions! Please see our [**Contributing Guidelines**](CONTRIBUTING.md).
 
 ```bash
-# 🍴 Hacer fork del repositorio
-# 🌿 Crear rama de característica
-git checkout -b feature/caracteristica-increible
+# 🍴 Fork the repository
+# 🌿 Create feature branch
+git checkout -b feature/amazing-feature
 
-# 💾 Hacer commit de cambios
-git commit -m '✨ Agregar característica increíble'
+# 💾 Commit changes
+git commit -m '✨ Add amazing feature'
 
-# 📤 Hacer push a la rama
-git push origin feature/caracteristica-increible
+# 📤 Push to branch
+git push origin feature/amazing-feature
 
-# 🔄 Abrir Pull Request
+# 🔄 Open Pull Request
 ```
 
 ---
 
-## 📞 **Contacto y Soporte**
+## 📞 **Contact and Support**
 
 <div align="center">
 
-| Canal                     | Información                                                         |
-| ------------------------- | ------------------------------------------------------------------- |
-| 👨‍💻 **Desarrollador**      | fintechinsightai                                                    |
-| 📧 **Correo Electrónico** | hello@libxai.com                                                    |
-| 🌐 **Sitio Web**          | [libxai.com](https://libxai.com)                                    |
-| 🐛 **Problemas**          | [GitHub Issues](https://github.com/libxai/ganttAI/issues)           |
-| 💬 **Discusiones**        | [GitHub Discussions](https://github.com/libxai/ganttAI/discussions) |
+| Channel            | Information                                                         |
+| ------------------ | ------------------------------------------------------------------- |
+| 👨‍💻 **Developer**   | fintechinsightai                                                    |
+| 📧 **Email**       | hello@libxai.com                                                    |
+| 🌐 **Website**     | [libxai.com](https://libxai.com)                                    |
+| 🐛 **Issues**      | [GitHub Issues](https://github.com/libxai/ganttAI/issues)           |
+| 💬 **Discussions** | [GitHub Discussions](https://github.com/libxai/ganttAI/discussions) |
 
 </div>
 
 ---
 
-## 📊 **Estadísticas del Proyecto**
+## 📊 **Project Stats**
 
 <div align="center">
 
-![Estrellas GitHub](https://img.shields.io/github/stars/libxai/ganttAI?style=for-the-badge&logo=github&color=FFD700)
-![Forks GitHub](https://img.shields.io/github/forks/libxai/ganttAI?style=for-the-badge&logo=github&color=32CD32)
-![Issues GitHub](https://img.shields.io/github/issues/libxai/ganttAI?style=for-the-badge&logo=github&color=FF6B6B)
-![Contribuidores GitHub](https://img.shields.io/github/contributors/libxai/ganttAI?style=for-the-badge&logo=github&color=4ECDC4)
+![GitHub stars](https://img.shields.io/github/stars/libxai/ganttAI?style=for-the-badge&logo=github&color=FFD700)
+![GitHub forks](https://img.shields.io/github/forks/libxai/ganttAI?style=for-the-badge&logo=github&color=32CD32)
+![GitHub issues](https://img.shields.io/github/issues/libxai/ganttAI?style=for-the-badge&logo=github&color=FF6B6B)
+![GitHub contributors](https://img.shields.io/github/contributors/libxai/ganttAI?style=for-the-badge&logo=github&color=4ECDC4)
 
 </div>
 
@@ -342,14 +342,14 @@ git push origin feature/caracteristica-increible
 
 <div align="center">
 
-### 📄 **Licencia**
+### 📄 **License**
 
-Este proyecto está licenciado bajo la **Licencia MIT** - consulta el archivo [LICENSE](LICENSE) para más detalles.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-### 🌟 **Reconocimientos**
+### 🌟 **Acknowledgments**
 
-Construido con 🤖 **IA** y ❤️ **creatividad humana** por el equipo **LibXAI**
+Built with 🤖 **AI** and ❤️ **human creativity** by the **LibXAI** team
 
-**¡Únete a la revolución de la gestión de proyectos inteligente!** 🚀
+**Join the intelligent project management revolution!** 🚀
 
 </div>
