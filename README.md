@@ -23,11 +23,11 @@
 
 ### 🖥️ Características Visuales Destacadas
 
-- **📊 Timeline Inteligente**: Visualización clara de mayo a julio 2025 con progreso en tiempo real
-- **🎨 Diseño Moderno**: Interfaz oscura profesional con elementos coloridos para mejor UX
+- **📊 Cronograma Inteligente**: Visualización clara de mayo a julio 2025 con progreso en tiempo real
+- **🎨 Diseño Moderno**: Interfaz oscura profesional con elementos coloridos para mejor experiencia de usuario
 - **📈 Indicadores de Progreso**: Barras de progreso dinámicas (100%, 30%, 25%, 5%, 0%, 10%)
 - **🤖 Asistente IA**: Panel lateral integrado para optimización automática de tareas
-- **⚡ WBS Inteligente**: Estructura de desglose de trabajo con jerarquía visual
+- **⚡ EDT Inteligente**: Estructura de Desglose del Trabajo con jerarquía visual
 
 ---
 
@@ -53,7 +53,7 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 - **🎯 Análisis de Ruta Crítica**: Identificación automatizada de tareas críticas
 - **🌐 Vistas Multi-proyecto**: Gestiona múltiples proyectos con paneles unificados
 
-### 🎨 **UX/UI Moderna**
+### 🎨 **Experiencia de Usuario Moderna**
 
 - ✅ **Diseño Responsivo**: Perfecto en escritorio, tablet y móvil
 - 🌓 **Temas Oscuro/Claro**: Modos de apariencia personalizables
@@ -62,7 +62,7 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 🛠️ Pila Tecnológica
 
 <table>
 <tr>
@@ -72,7 +72,7 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 
 - React 19.0 + TypeScript 5.7
 - Vite 6.3 para desarrollo ultrarrápido
-- CSS moderno con CSS Modules
+- CSS moderno con Módulos CSS
 
 </td>
 <td width="50%">
@@ -148,7 +148,7 @@ const MiProyecto = () => {
     },
     {
       id: "3",
-      titulo: "Pruebas y QA",
+      titulo: "Pruebas y Control de Calidad",
       inicio: "2025-07-01",
       duracion: 10,
       progreso: 25,
@@ -198,30 +198,30 @@ const MiProyecto = () => {
 <tr>
 <td width="33%">
 
-### 💻 **Desarrollo Software**
+### 💻 **Desarrollo de Software**
 
 - Planificación de sprints
-- Gestión de releases
-- Seguimiento de bugs
+- Gestión de lanzamientos
+- Seguimiento de errores
 - Integración continua
 
 </td>
 <td width="33%">
 
-### 🏗️ **Proyectos Construcción**
+### 🏗️ **Proyectos de Construcción**
 
-- Optimización cronogramas
-- Programación recursos
+- Optimización de cronogramas
+- Programación de recursos
 - Control de calidad
 - Gestión de proveedores
 
 </td>
 <td width="33%">
 
-### 📱 **Campañas Marketing**
+### 📱 **Campañas de Marketing**
 
 - Coordinación multicanal
-- Lanzamientos productos
+- Lanzamientos de productos
 - Eventos corporativos
 - Análisis de ROI
 
@@ -235,12 +235,12 @@ const MiProyecto = () => {
 
 <div align="center">
 
-| Métrica                 | Valor                 | Estado          |
-| ----------------------- | --------------------- | --------------- |
-| 🚀 **Renderizado**      | >1000 tareas          | ✅ Optimizado   |
-| ⚡ **Tiempo Respuesta** | <100ms                | ✅ Ultra-rápido |
-| 📱 **Lighthouse Score** | 95+                   | ✅ Excelente    |
-| 🌐 **Compatibilidad**   | Todos los navegadores | ✅ Universal    |
+| Métrica                      | Valor                 | Estado          |
+| ---------------------------- | --------------------- | --------------- |
+| 🚀 **Renderizado**           | >1000 tareas          | ✅ Optimizado   |
+| ⚡ **Tiempo Respuesta**      | <100ms                | ✅ Ultra-rápido |
+| 📱 **Puntuación Lighthouse** | 95+                   | ✅ Excelente    |
+| 🌐 **Compatibilidad**        | Todos los navegadores | ✅ Universal    |
 
 </div>
 
@@ -248,17 +248,17 @@ const MiProyecto = () => {
 
 ## 🗺️ **Hoja de Ruta**
 
-### 🎯 **Versión 2.0** (Q3 2025)
+### 🎯 **Versión 2.0** (T3 2025)
 
-- [ ] 🧠 Integración Machine Learning para reconocimiento de patrones
+- [ ] 🧠 Integración de Aprendizaje Automático para reconocimiento de patrones
 - [ ] 🔄 Optimización avanzada de recursos impulsada por IA
 - [ ] 🔗 Integración con Jira, Asana, Monday.com
 - [ ] 📱 Aplicación móvil complementaria iOS/Android
 
-### 🚀 **Versión 2.1** (Q4 2025)
+### 🚀 **Versión 2.1** (T4 2025)
 
 - [ ] 🗣️ Procesamiento de Lenguaje Natural para creación de tareas
-- [ ] 📊 Reportes de estado automatizados con insights IA
+- [ ] 📊 Reportes de estado automatizados con perspectivas IA
 - [ ] 📈 Panel de análisis avanzado con ML
 - [ ] 🔐 Integración SSO empresarial (SAML, OAuth)
 
@@ -276,7 +276,7 @@ cd ganttAI
 # 📦 Instalar dependencias
 npm install
 
-# 🚀 Iniciar servidor desarrollo
+# 🚀 Iniciar servidor de desarrollo
 npm run dev
 
 # 🏗️ Construir para producción
@@ -285,7 +285,7 @@ npm run build
 # 🧪 Ejecutar pruebas
 npm run test
 
-# 👀 Preview de producción
+# 👀 Vista previa de producción
 npm run preview
 ```
 
@@ -296,14 +296,14 @@ npm run preview
 ¡Damos la bienvenida a las contribuciones! Consulta nuestras [**Guías de Contribución**](CONTRIBUTING.md).
 
 ```bash
-# 🍴 Fork del repositorio
+# 🍴 Hacer fork del repositorio
 # 🌿 Crear rama de característica
 git checkout -b feature/caracteristica-increible
 
-# 💾 Commit de cambios
+# 💾 Hacer commit de cambios
 git commit -m '✨ Agregar característica increíble'
 
-# 📤 Push a la rama
+# 📤 Hacer push a la rama
 git push origin feature/caracteristica-increible
 
 # 🔄 Abrir Pull Request
@@ -315,13 +315,13 @@ git push origin feature/caracteristica-increible
 
 <div align="center">
 
-| Canal                | Información                                                         |
-| -------------------- | ------------------------------------------------------------------- |
-| 👨‍💻 **Desarrollador** | fintechinsightai                                                    |
-| 📧 **Email**         | hello@libxai.com                                                    |
-| 🌐 **Sitio Web**     | [libxai.com](https://libxai.com)                                    |
-| 🐛 **Issues**        | [GitHub Issues](https://github.com/libxai/ganttAI/issues)           |
-| 💬 **Discusiones**   | [GitHub Discussions](https://github.com/libxai/ganttAI/discussions) |
+| Canal                     | Información                                                         |
+| ------------------------- | ------------------------------------------------------------------- |
+| 👨‍💻 **Desarrollador**      | fintechinsightai                                                    |
+| 📧 **Correo Electrónico** | hello@libxai.com                                                    |
+| 🌐 **Sitio Web**          | [libxai.com](https://libxai.com)                                    |
+| 🐛 **Problemas**          | [GitHub Issues](https://github.com/libxai/ganttAI/issues)           |
+| 💬 **Discusiones**        | [GitHub Discussions](https://github.com/libxai/ganttAI/discussions) |
 
 </div>
 
@@ -331,10 +331,10 @@ git push origin feature/caracteristica-increible
 
 <div align="center">
 
-![GitHub stars](https://img.shields.io/github/stars/libxai/ganttAI?style=for-the-badge&logo=github&color=FFD700)
-![GitHub forks](https://img.shields.io/github/forks/libxai/ganttAI?style=for-the-badge&logo=github&color=32CD32)
-![GitHub issues](https://img.shields.io/github/issues/libxai/ganttAI?style=for-the-badge&logo=github&color=FF6B6B)
-![GitHub contributors](https://img.shields.io/github/contributors/libxai/ganttAI?style=for-the-badge&logo=github&color=4ECDC4)
+![Estrellas GitHub](https://img.shields.io/github/stars/libxai/ganttAI?style=for-the-badge&logo=github&color=FFD700)
+![Forks GitHub](https://img.shields.io/github/forks/libxai/ganttAI?style=for-the-badge&logo=github&color=32CD32)
+![Issues GitHub](https://img.shields.io/github/issues/libxai/ganttAI?style=for-the-badge&logo=github&color=FF6B6B)
+![Contribuidores GitHub](https://img.shields.io/github/contributors/libxai/ganttAI?style=for-the-badge&logo=github&color=4ECDC4)
 
 </div>
 
