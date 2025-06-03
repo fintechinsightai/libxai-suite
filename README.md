@@ -9,9 +9,9 @@
 <div align="center">
 
 [![Licencia MIT](https://img.shields.io/badge/Licencia-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)
-[![React](https://img.shields.io/badge/React-18.2.0-61DAFB.svg?style=for-the-badge&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-4.4-646CFF.svg?style=for-the-badge&logo=vite)](https://vitejs.dev/)
+[![React](https://img.shields.io/badge/React-19.0.0-61DAFB.svg?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6.svg?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6.3-646CFF.svg?style=for-the-badge&logo=vite)](https://vitejs.dev/)
 
 </div>
 
@@ -70,8 +70,8 @@ LibXAI Suite es una librería de diagramas de Gantt de vanguardia, potenciada po
 
 **🎨 Frontend**
 
-- React 18.2 + TypeScript 5.0
-- Vite 4.4 para desarrollo ultrarrápido
+- React 19.0 + TypeScript 5.7
+- Vite 6.3 para desarrollo ultrarrápido
 - CSS moderno con CSS Modules
 
 </td>
