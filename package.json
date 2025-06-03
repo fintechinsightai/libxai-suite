@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@azure-rest/ai-inference": "^1.0.0-beta.6",
+    "@azure/core-auth": "^1.9.0",
     "@types/react-datepicker": "^6.2.0",
     "date-fns": "^4.1.0",
+    "openai": "^5.0.2",
     "react": "^19.0.0",
     "react-datepicker": "^8.3.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "requirements-gathering-agent": "^2.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
@@ -25,6 +29,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1"
