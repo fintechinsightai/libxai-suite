@@ -4,8 +4,8 @@
   height: 100vh;
   width: 100%;
   max-width: 100%;
-  background-color: var(--color-bg-primary); /* Usando variable para el fondo */
-  color: var(--color-text-primary); /* Usando variable para el texto */
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
   overflow: hidden;
   position: relative;
   min-height: 100%;
@@ -13,14 +13,105 @@
     color var(--transition-normal);
 }
 
+/* ========== LOADER IA - NUEVOS ESTILOS ========== */
+/* Loader IA - Overlay */
+.aiGeneratingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(30, 30, 46, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.aiGeneratingContent {
+  text-align: center;
+  color: white;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+/* Spinner IA */
+.aiSpinner {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  border: 3px solid rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+  border-top: 3px solid #3b82f6;
+  animation: spin 1s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.aiSpinnerInner {
+  font-weight: bold;
+  font-size: 18px;
+  color: #3b82f6;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Barra de progreso */
+.aiProgress {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.aiProgressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+  background-size: 200% 100%;
+  animation: progressFlow 2s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+/* Animaciones del loader */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes progressFlow {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 /* Barra superior con logo y avatar */
 .topbarMain {
   display: flex;
   align-items: center;
   padding: 0 1rem;
-  background-color: var(
-    --color-bg-secondary
-  ); /* Usando variable para el fondo */
+  background-color: var(--color-bg-secondary);
   border-bottom: 1px solid var(--color-border);
   height: 56px;
   min-height: 56px;
@@ -49,7 +140,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: var(--color-accent-blue); /* Usando variable para el azul */
+  background-color: var(--color-accent-blue);
   color: white;
   display: flex;
   align-items: center;
@@ -75,9 +166,9 @@
 }
 
 .searchBar {
-  background-color: var(--color-bg-accent); /* Usando variable para el fondo */
+  background-color: var(--color-bg-accent);
   border: 1px solid var(--color-border);
-  border-radius: 9999px; /* Fully rounded */
+  border-radius: 9999px;
   padding: 0.375rem 1rem;
   font-size: 0.875rem;
   color: var(--color-text-primary);
@@ -88,11 +179,11 @@
 }
 
 .searchBar:focus {
-  border-color: var(--color-accent-blue); /* Blue focus border */
+  border-color: var(--color-accent-blue);
 }
 
 .searchBar::placeholder {
-  color: var(--color-text-muted); /* Lighter placeholder text */
+  color: var(--color-text-muted);
 }
 
 /* Contenedor para el botón de tema */
@@ -108,7 +199,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: var(--color-accent-blue); /* Blue avatar */
+  background-color: var(--color-accent-blue);
   color: white;
   display: flex;
   align-items: center;
@@ -122,9 +213,7 @@
   display: flex;
   align-items: center;
   padding: 0 1rem;
-  background-color: var(
-    --color-bg-secondary
-  ); /* Usando variable para el fondo */
+  background-color: var(--color-bg-secondary);
   border-bottom: 1px solid var(--color-border);
   height: 48px;
   min-height: 48px;
@@ -136,7 +225,7 @@
   right: 0;
   width: 100%;
   box-sizing: border-box;
-  justify-content: space-between; /* Distribute items */
+  justify-content: space-between;
   transition: background-color var(--transition-normal),
     border-color var(--transition-normal);
 }
@@ -149,13 +238,11 @@
 }
 
 .viewTabActive {
-  background-color: var(
-    --color-accent-blue
-  ); /* Blue background for active tab */
+  background-color: var(--color-accent-blue);
   color: white;
   border: none;
   padding: 0.375rem 1rem;
-  border-radius: 9999px; /* Fully rounded button */
+  border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -163,7 +250,7 @@
 }
 
 .viewTabActive:hover {
-  background-color: var(--color-accent-blue-light); /* Darker blue on hover */
+  background-color: var(--color-accent-blue-light);
 }
 
 /* Control de escala de tiempo */
@@ -171,7 +258,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto; /* Center in the bar */
+  margin: 0 auto;
 }
 
 .scaleControl {
@@ -188,7 +275,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: var(--color-bg-accent); /* Darker button background */
+  background-color: var(--color-bg-accent);
   color: var(--color-text-primary);
   border: none;
   display: flex;
@@ -200,7 +287,7 @@
 }
 
 .scaleControl button:hover {
-  background-color: var(--color-border); /* Lighter on hover */
+  background-color: var(--color-border);
 }
 
 .scaleControl span {
@@ -251,11 +338,11 @@
 .aiBadge {
   display: flex;
   align-items: center;
-  background-color: var(--color-accent-blue); /* Blue background */
+  background-color: var(--color-accent-blue);
   color: white;
   border: none;
   padding: 0.375rem 0.75rem;
-  border-radius: 9999px; /* Fully rounded */
+  border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -263,7 +350,13 @@
 }
 
 .aiBadge:hover {
-  background-color: var(--color-accent-blue-light); /* Darker blue on hover */
+  background-color: var(--color-accent-blue-light);
+}
+
+.aiBadge:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-bg-accent);
 }
 
 .aiIcon {
@@ -271,7 +364,7 @@
   height: 20px;
   border-radius: 50%;
   background-color: white;
-  color: var(--color-accent-blue); /* Blue text in white circle */
+  color: var(--color-accent-blue);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -290,10 +383,10 @@
 
 .exportButton {
   background-color: transparent;
-  color: var(--color-text-secondary); /* Light text color */
+  color: var(--color-text-secondary);
   border: none;
   padding: 0.375rem 0.75rem;
-  border-radius: 9999px; /* Fully rounded */
+  border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
@@ -301,7 +394,7 @@
 }
 
 .exportButton:hover {
-  background-color: var(--color-bg-accent); /* Slight background on hover */
+  background-color: var(--color-bg-accent);
 }
 
 /* Menú desplegable de opciones de exportación */
@@ -309,7 +402,7 @@
   position: absolute;
   top: 100%;
   right: 0;
-  width: 170px; /* ACTUALIZADO: Aumentado de 160px a 170px para acomodar MS Project */
+  width: 170px;
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
@@ -356,28 +449,27 @@
 }
 
 .exportOptions button:nth-child(1)::before {
-  background-color: #ff5733; /* Color para PDF */
+  background-color: #ff5733;
   border-radius: 2px;
 }
 
 .exportOptions button:nth-child(2)::before {
-  background-color: #33aa46; /* Color para Excel */
+  background-color: #33aa46;
   border-radius: 2px;
 }
 
 .exportOptions button:nth-child(3)::before {
-  background-color: #4285f4; /* Color para CSV */
+  background-color: #4285f4;
   border-radius: 2px;
 }
 
 .exportOptions button:nth-child(4)::before {
-  background-color: #fbbc05; /* Color para PNG */
+  background-color: #fbbc05;
   border-radius: 2px;
 }
 
-/* NUEVO: Estilo para el quinto botón (MS Project) */
 .exportOptions button:nth-child(5)::before {
-  background-color: #0f4c81; /* Color azul para Microsoft Project */
+  background-color: #0f4c81;
   border-radius: 2px;
 }
 
@@ -462,7 +554,7 @@
   flex: 1;
   overflow: hidden;
   position: relative;
-  height: calc(100% - 104px); /* Subtract height of both topbars */
+  height: calc(100% - 104px);
   min-height: 0;
   width: 100%;
 }
@@ -472,7 +564,7 @@
   width: 300px;
   min-width: 300px;
   max-width: 300px;
-  background-color: var(--color-bg-primary); /* Dark blue */
+  background-color: var(--color-bg-primary);
   border-right: 1px solid var(--color-border-light);
   display: flex;
   flex-direction: column;
@@ -491,7 +583,7 @@
   font-weight: 600;
   color: var(--color-text-secondary);
   margin: 0;
-  background-color: var(--color-bg-accent); /* Slightly lighter blue */
+  background-color: var(--color-bg-accent);
   border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
@@ -508,7 +600,7 @@
   display: flex;
   flex-direction: column;
   min-height: auto;
-  height: 100%; /* <-- AGREGAR ESTO */
+  height: 100%;
   width: calc(100% - 300px);
   max-width: calc(100% - 300px);
   background-color: var(--color-bg-primary);
@@ -523,7 +615,7 @@
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  background-color: var(--color-accent-green); /* Green button */
+  background-color: var(--color-accent-green);
   color: white;
   border: none;
   font-size: 1.5rem;
@@ -537,7 +629,7 @@
 }
 
 .addTaskFloating:hover {
-  background-color: var(--color-accent-green); /* Darker green on hover */
+  background-color: var(--color-accent-green);
   filter: brightness(90%);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
@@ -564,7 +656,7 @@
   bottom: 1.5rem;
   right: 1.5rem;
   width: 320px;
-  background-color: var(--color-bg-secondary); /* Slightly lighter blue */
+  background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   overflow: hidden;
@@ -579,7 +671,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  background-color: var(--color-bg-primary); /* Dark blue header */
+  background-color: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-border);
   transition: background-color var(--transition-normal),
     border-color var(--transition-normal);
@@ -598,9 +690,8 @@
 }
 
 .iaChatPrompt {
-  width: calc(100% - 0px); /* Opción 1: Usar calc() */
-  /* O alternativamente: */
-  box-sizing: border-box; /* Opción 2: Cambiar box-sizing */
+  width: calc(100% - 0px);
+  box-sizing: border-box;
   width: 100%;
   height: 100px;
   padding: 0.5rem;
@@ -617,12 +708,17 @@
 
 .iaChatPrompt:focus {
   outline: none;
-  border-color: var(--color-accent-blue); /* Blue focus */
+  border-color: var(--color-accent-blue);
+}
+
+.iaChatPrompt:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .iaChatSubmit {
   width: 100%;
-  background-color: var(--color-accent-blue); /* Blue button */
+  background-color: var(--color-accent-blue);
   color: white;
   border: none;
   padding: 0.5rem;
@@ -634,12 +730,37 @@
 }
 
 .iaChatSubmit:hover {
-  background-color: var(--color-accent-blue-light); /* Darker blue on hover */
+  background-color: var(--color-accent-blue-light);
+}
+
+.iaChatSubmit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--color-bg-accent);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-normal);
+}
+
+.closeButton:hover {
+  color: var(--color-text-primary);
 }
 
 /* Formulario para añadir tarea */
 .formContainer {
-  background-color: var(--color-bg-secondary); /* Slightly lighter blue */
+  background-color: var(--color-bg-secondary);
   border-radius: 0.5rem;
   padding: 1.5rem;
   width: 100%;
@@ -655,7 +776,7 @@
   transition: color var(--transition-normal);
 }
 
-/* Estilos para los formularios - a agregar en AddTaskForm */
+/* Estilos para los formularios */
 .formGroup {
   margin-bottom: 1rem;
 }
@@ -673,7 +794,7 @@
 .formSelect {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  background-color: var(--color-bg-accent); /* Darker input */
+  background-color: var(--color-bg-accent);
   border: 1px solid var(--color-border);
   border-radius: 0.375rem;
   color: var(--color-text-primary);
@@ -685,7 +806,7 @@
 .formInput:focus,
 .formSelect:focus {
   outline: none;
-  border-color: var(--color-accent-blue); /* Blue focus */
+  border-color: var(--color-accent-blue);
 }
 
 .formActions {
@@ -714,7 +835,7 @@
 
 .submitButton {
   padding: 0.5rem 1rem;
-  background-color: var(--color-accent-green); /* Green button */
+  background-color: var(--color-accent-green);
   border: none;
   border-radius: 0.375rem;
   color: white;
@@ -725,7 +846,7 @@
 }
 
 .submitButton:hover {
-  background-color: var(--color-accent-green); /* Darker green */
+  background-color: var(--color-accent-green);
   filter: brightness(90%);
 }
 
@@ -887,6 +1008,17 @@
     width: 2.5rem;
     height: 2.5rem;
   }
+
+  /* Loader responsive */
+  .aiGeneratingContent {
+    padding: 1.5rem;
+    max-width: 300px;
+  }
+
+  .aiSpinner {
+    width: 60px;
+    height: 60px;
+  }
 }
 
 /* Diseño responsivo - Móviles */
@@ -924,7 +1056,6 @@
     min-height: 180px;
     max-height: 180px;
   }
-
   .sectionTitle {
     padding: 0.75rem;
     font-size: 0.75rem;
@@ -948,6 +1079,30 @@
   .gridConfigButton {
     padding: 0.25rem 0.5rem;
     font-size: 11px;
+  }
+
+  /* Loader responsive para móviles */
+  .aiGeneratingContent {
+    padding: 1rem;
+    max-width: 280px;
+  }
+
+  .aiSpinner {
+    width: 50px;
+    height: 50px;
+  }
+
+  .aiSpinnerInner {
+    font-size: 14px;
+  }
+
+  .aiGeneratingContent h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .aiGeneratingContent p {
+    font-size: 0.875rem;
   }
 }
 
@@ -995,6 +1150,31 @@
   .actionGroup > * {
     min-width: auto;
   }
+
+  /* Loader para móviles pequeños */
+  .aiGeneratingContent {
+    padding: 0.75rem;
+    max-width: 240px;
+  }
+
+  .aiSpinner {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 1rem;
+  }
+
+  .aiSpinnerInner {
+    font-size: 12px;
+  }
+
+  .aiGeneratingContent h3 {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .aiGeneratingContent p {
+    font-size: 0.75rem;
+  }
 }
 
 /* Diseño responsivo - Móviles ultra pequeños */
@@ -1017,6 +1197,40 @@
   .actionGroup {
     gap: 0.25rem;
   }
+
+  /* Loader para pantallas ultra pequeñas */
+  .aiGeneratingOverlay {
+    padding: 1rem;
+  }
+
+  .aiGeneratingContent {
+    padding: 0.5rem;
+    max-width: 200px;
+  }
+
+  .aiSpinner {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 0.75rem;
+  }
+
+  .aiSpinnerInner {
+    font-size: 10px;
+  }
+
+  .aiGeneratingContent h3 {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .aiGeneratingContent p {
+    font-size: 0.625rem;
+  }
+
+  .aiProgress {
+    height: 3px;
+    margin-top: 0.5rem;
+  }
 }
 
 /* Mejoras de accesibilidad y animaciones */
@@ -1027,4 +1241,171 @@
 /* Animaciones suaves para todos los elementos interactivos */
 .gridConfigButton {
   transition: all 0.2s ease;
+}
+
+/* Estados adicionales para el loader */
+.aiGeneratingOverlay {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Soporte para modo dark/light del loader */
+@media (prefers-color-scheme: light) {
+  .aiGeneratingOverlay {
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .aiGeneratingContent {
+    color: var(--color-text-primary);
+  }
+
+  .aiGeneratingContent h3,
+  .aiGeneratingContent p {
+    color: var(--color-text-primary);
+  }
+
+  .aiSpinner {
+    border: 3px solid rgba(59, 130, 246, 0.3);
+    border-top: 3px solid #3b82f6;
+  }
+
+  .aiProgress {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Animaciones adicionales para mejor UX */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.aiGeneratingContent h3 {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.aiGeneratingContent p {
+  animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+.aiProgress {
+  animation: fadeInUp 0.6s ease-out 0.9s both;
+}
+
+/* Efectos adicionales para el spinner */
+.aiSpinner::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top: 2px solid rgba(59, 130, 246, 0.5);
+  animation: spin 2s linear infinite reverse;
+}
+
+/* Mejoras de performance para las animaciones */
+.aiSpinner,
+.aiSpinnerInner,
+.aiProgressBar {
+  will-change: transform;
+}
+
+/* Estados de hover mejorados para botones */
+.aiBadge:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.gridConfigButton:hover:not(:disabled) {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Transiciones suaves para todos los estados disabled */
+.aiBadge:disabled,
+.iaChatSubmit:disabled,
+.iaChatPrompt:disabled {
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+/* Mejoras de accesibilidad para el loader */
+.aiGeneratingOverlay {
+  outline: none;
+}
+
+.aiGeneratingOverlay:focus-visible {
+  outline: 2px solid var(--color-accent-blue);
+  outline-offset: 4px;
+}
+
+/* Soporte para reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .aiSpinner,
+  .aiSpinner::before,
+  .aiProgressBar {
+    animation: none;
+  }
+
+  .aiSpinnerInner {
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  .aiGeneratingContent h3,
+  .aiGeneratingContent p,
+  .aiProgress {
+    animation: none;
+  }
+}
+
+/* Tema oscuro específico para el loader */
+[data-theme="dark"] .aiGeneratingOverlay {
+  background: rgba(30, 30, 46, 0.98);
+}
+
+[data-theme="light"] .aiGeneratingOverlay {
+  background: rgba(255, 255, 255, 0.98);
+}
+
+/* Optimizaciones finales */
+.aiGeneratingOverlay * {
+  box-sizing: border-box;
+}
+
+/* Estados de carga específicos para elementos del UI */
+.aiBadge.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.aiBadge.loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }

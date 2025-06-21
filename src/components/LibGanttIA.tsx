@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Task } from "../types/ganttTypes";
+import { Task, User, ResourceAssignment } from "../types/ganttTypes";
 import GanttChart from "./GanttChart";
 import TaskList from "./TaskList";
 import AddTaskForm from "./AddTaskForm";
 import ThemeToggle from "./ThemeToggle";
-import GridConfigModal from "./GridConfigModal"; // NUEVO IMPORT
+import GridConfigModal from "./GridConfigModal";
 import { useTheme } from "../context/ThemeContext";
 import styles from "../styles/LibGanttIA.module.css";
 
@@ -40,19 +40,47 @@ interface ExportData {
   Recursos: string;
 }
 
+// ========== INTERFAZ LIMPIA SIN BOTÓN RECURSOS ==========
 interface LibGanttIAProps {
+  // PROPS EXISTENTES
   onGenerateTasks?: (prompt: string) => Promise<Task[]>;
   initialTasks?: Task[];
   showIAAssistant?: boolean;
   title?: string;
+
+  // ✅ PROPS PARA RECURSOS - REQUERIDAS
+  users: User[];
+  resourceAssignments: ResourceAssignment[];
+  showMiniAvatars?: boolean;
+  avatarSize?: "xs" | "sm" | "md";
+  maxAvatarsPerTask?: number;
+  showResourceNames?: boolean;
+  showWorkloadIndicators?: boolean;
+  onUserAssign?: (taskId: string, userId: string) => void;
+  onUserUnassign?: (taskId: string, userId: string) => void;
+  onResourceClick?: (user: User, taskId: string) => void;
 }
 
 const LibGanttIA: React.FC<LibGanttIAProps> = ({
+  // PROPS EXISTENTES
   onGenerateTasks = async () => [],
   initialTasks = [],
   showIAAssistant = true,
   title = "LibGantt-IA",
+
+  // ✅ PROPS LIMPIAS
+  users,
+  resourceAssignments,
+  showMiniAvatars = true,
+  avatarSize = "sm",
+  maxAvatarsPerTask = 3,
+  showResourceNames = false,
+  showWorkloadIndicators = true,
+  onUserAssign,
+  onUserUnassign,
+  onResourceClick,
 }) => {
+  // ========== ESTADOS EXISTENTES ==========
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [openMap, setOpenMap] = useState<{ [key: string]: boolean }>({});
   const [prompt, setPrompt] = useState<string>("");
@@ -63,7 +91,10 @@ const LibGanttIA: React.FC<LibGanttIAProps> = ({
   const [showExportMessage, setShowExportMessage] = useState<boolean>(false);
   const [exportMessageText, setExportMessageText] = useState<string>("");
 
-  // ESTADO PARA CONTROLAR EL MODAL DE GRILLA (EXTERNO)
+  // ✅ NUEVO ESTADO PARA LOADER IA
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+
+  // ESTADO PARA CONTROLAR EL MODAL DE GRILLA
   const [showGridModal, setShowGridModal] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>("es");
   const [gridConfig, setGridConfig] = useState<GridConfig>({
@@ -78,20 +109,54 @@ const LibGanttIA: React.FC<LibGanttIAProps> = ({
     showCurrentTime: false,
   });
 
-  // Referencia para el componente GanttChart con tipo específico
+  // ✅ ESTADOS LIMPIOS PARA RECURSOS
+  const [internalUsers, setInternalUsers] = useState<User[]>(users);
+  const [internalResourceAssignments, setInternalResourceAssignments] =
+    useState<ResourceAssignment[]>(resourceAssignments);
+
+  // Referencias existentes
   const ganttChartRef = useRef<{ exportToImage?: () => void }>(null);
   const ganttContainerRef = useRef<HTMLDivElement>(null);
 
-  // Usar el contexto de tema (si está disponible)
+  // Usar el contexto de tema
   const theme = useTheme?.() || { theme: "dark", toggleTheme: () => {} };
 
+  // ========== EFECTOS PARA SINCRONIZAR PROPS ==========
+  useEffect(() => {
+    setInternalUsers(users);
+  }, [users]);
+
+  useEffect(() => {
+    setInternalResourceAssignments(resourceAssignments);
+  }, [resourceAssignments]);
+
+  // DEBUG: Log para verificar configuración
+  useEffect(() => {
+    console.log("🎯 LibGanttIA - Estado:", {
+      usersCount: internalUsers.length,
+      tasksWithUsers: tasks.filter((t) => t.assignedUsers?.length).length,
+      totalAssignments: internalResourceAssignments.length,
+      usuariosDisponibles: internalUsers.map((u) => u.name),
+      tareasConUsuarios: tasks.map((t) => ({
+        nombre: t.name,
+        usuarios: t.assignedUsers?.map((u) => u.name) || [],
+      })),
+    });
+  }, [internalUsers, tasks, internalResourceAssignments]);
+
+  // ========== FUNCIONES PRINCIPALES CON LOADER ==========
   const handleGenerate = async () => {
     if (prompt.trim()) {
-      const generatedTasks = await onGenerateTasks(prompt);
-      setTasks(generatedTasks);
-      setOpenMap({});
-      setPrompt("");
-      setShowIAChat(false);
+      setIsGenerating(true); // ← MOSTRAR LOADER
+      try {
+        const generatedTasks = await onGenerateTasks(prompt);
+        setTasks(generatedTasks);
+        setOpenMap({});
+        setPrompt("");
+        setShowIAChat(false);
+      } finally {
+        setIsGenerating(false); // ← OCULTAR LOADER
+      }
     }
   };
 
@@ -214,7 +279,145 @@ const LibGanttIA: React.FC<LibGanttIAProps> = ({
     setTasks(updatedTasks);
   };
 
-  // FUNCIONALIDAD DE EXPORTACIÓN
+  // ========== FUNCIONES PARA GESTIÓN DE RECURSOS ==========
+
+  // Función para asignar usuario a tarea
+  const handleUserAssign = (taskId: string, userId: string) => {
+    console.log(`🔄 Asignando usuario ${userId} a tarea ${taskId}`);
+
+    if (onUserAssign) {
+      onUserAssign(taskId, userId);
+      return;
+    }
+
+    // Lógica interna por defecto
+    const user = internalUsers.find((u) => u.id === userId);
+    if (!user) {
+      console.warn(`❌ Usuario ${userId} no encontrado`);
+      return;
+    }
+
+    // Actualizar assignedUsers en la tarea
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === taskId) {
+          const currentUsers = task.assignedUsers || [];
+          const isAlreadyAssigned = currentUsers.some((u) => u.id === userId);
+
+          if (!isAlreadyAssigned) {
+            console.log(
+              `✅ Usuario ${user.name} asignado a tarea ${task.name}`
+            );
+            return {
+              ...task,
+              assignedUsers: [...currentUsers, user],
+            };
+          }
+          return task;
+        } else if (task.subtasks) {
+          return {
+            ...task,
+            subtasks: task.subtasks.map((subtask) => {
+              if (subtask.id === taskId) {
+                const currentUsers = subtask.assignedUsers || [];
+                const isAlreadyAssigned = currentUsers.some(
+                  (u) => u.id === userId
+                );
+
+                if (!isAlreadyAssigned) {
+                  return {
+                    ...subtask,
+                    assignedUsers: [...currentUsers, user],
+                  };
+                }
+                return subtask;
+              }
+              return subtask;
+            }),
+          };
+        }
+        return task;
+      })
+    );
+
+    // Crear nueva asignación
+    const newAssignment: ResourceAssignment = {
+      id: `assignment-${Date.now()}`,
+      taskId,
+      userId,
+      role: "Contributor",
+      allocatedHours: 8,
+      estimatedHours: 8,
+      assignedDate: new Date().toISOString().split("T")[0],
+      status: "Assigned",
+    };
+
+    setInternalResourceAssignments((prev) => [...prev, newAssignment]);
+  };
+
+  // Función para desasignar usuario de tarea
+  const handleUserUnassign = (taskId: string, userId: string) => {
+    console.log(`🔄 Desasignando usuario ${userId} de tarea ${taskId}`);
+
+    if (onUserUnassign) {
+      onUserUnassign(taskId, userId);
+      return;
+    }
+
+    // Lógica interna por defecto
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => {
+        if (task.id === taskId) {
+          return {
+            ...task,
+            assignedUsers:
+              task.assignedUsers?.filter((u) => u.id !== userId) || [],
+          };
+        } else if (task.subtasks) {
+          return {
+            ...task,
+            subtasks: task.subtasks.map((subtask) => {
+              if (subtask.id === taskId) {
+                return {
+                  ...subtask,
+                  assignedUsers:
+                    subtask.assignedUsers?.filter((u) => u.id !== userId) || [],
+                };
+              }
+              return subtask;
+            }),
+          };
+        }
+        return task;
+      })
+    );
+
+    // Remover asignación
+    setInternalResourceAssignments((prev) =>
+      prev.filter(
+        (assignment) =>
+          !(assignment.taskId === taskId && assignment.userId === userId)
+      )
+    );
+  };
+
+  // Función para manejar click en recurso/avatar
+  const handleResourceClick = (user: User, taskId: string) => {
+    console.log(`👤 Click en usuario ${user.name} para tarea ${taskId}`);
+
+    if (onResourceClick) {
+      onResourceClick(user, taskId);
+    } else {
+      // Comportamiento por defecto: mostrar información del usuario
+      alert(
+        `Usuario: ${user.name}\nRol: ${user.role}\nEmail: ${
+          user.email || "No disponible"
+        }`
+      );
+    }
+  };
+
+  // ========== FUNCIONALIDAD DE EXPORTACIÓN COMPLETA ==========
 
   // Función para mostrar mensaje de exportación
   const showExportNotification = (message: string) => {
@@ -385,7 +588,8 @@ const LibGanttIA: React.FC<LibGanttIAProps> = ({
         }
 
         const duration = calculateDuration(task.startDate, task.endDate);
-        const resourceCount = task.resources?.length || 1;
+        const resourceCount =
+          task.assignedUsers?.length || task.resources?.length || 1;
 
         const taskData = [
           taskId.toString(),
@@ -394,7 +598,11 @@ const LibGanttIA: React.FC<LibGanttIAProps> = ({
           formatDateForProject(task.startDate),
           ensureEndDate(task.startDate, task.endDate, duration),
           predecessorIds ? `"${predecessorIds}"` : "",
-          task.resources ? `"${task.resources.join(";")}"` : "",
+          task.assignedUsers
+            ? `"${task.assignedUsers.map((u) => u.name).join(";")}"`
+            : task.resources
+            ? `"${task.resources.join(";")}"`
+            : "",
           outlineLevel.toString(),
           convertPriorityToNumber(task.priority).toString(),
           Math.round(task.progress || 0).toString(),
@@ -464,6 +672,7 @@ const LibGanttIA: React.FC<LibGanttIAProps> = ({
         dependencies,
         priority,
         resources,
+        assignedUsers,
       } = task;
 
       const formattedTask: ExportData = {
@@ -475,7 +684,10 @@ const LibGanttIA: React.FC<LibGanttIAProps> = ({
         Progreso: `${Math.round(progress || 0)}%`,
         Dependencias: dependencies?.join(", ") || "",
         Prioridad: priority || "Normal",
-        Recursos: resources?.join(", ") || "",
+        Recursos:
+          assignedUsers?.map((u) => u.name).join(", ") ||
+          resources?.join(", ") ||
+          "",
       };
 
       flattenedTasks.push(formattedTask);
@@ -647,6 +859,7 @@ startxref
           error instanceof Error ? error.message : "Error desconocido"
         }`
       );
+
       return null;
     }
   };
@@ -912,6 +1125,30 @@ startxref
 
   return (
     <div className={styles.container}>
+      {/* ✅ LOADER IA - NUEVO COMPONENTE */}
+      {isGenerating && (
+        <div className={styles.aiGeneratingOverlay}>
+          <div className={styles.aiGeneratingContent}>
+            <div className={styles.aiSpinner}>
+              <div className={styles.aiSpinnerInner}>IA</div>
+            </div>
+            <h3>
+              {language === "es"
+                ? "Generando proyecto con IA"
+                : "Generating project with AI"}
+            </h3>
+            <p>
+              {language === "es"
+                ? "Analizando requerimientos y asignando recursos..."
+                : "Analyzing requirements and assigning resources..."}
+            </p>
+            <div className={styles.aiProgress}>
+              <div className={styles.aiProgressBar}></div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Barra superior con logo y avatar */}
       <div className={styles.topbarMain}>
         <div className={styles.logoSection}>
@@ -931,7 +1168,6 @@ startxref
             className={styles.searchBar}
           />
 
-          {/* Botón de cambio de tema integrado */}
           <div className={styles.themeToggleWrapper}>
             <ThemeToggle />
           </div>
@@ -941,7 +1177,7 @@ startxref
 
       {/* Barra de control del diagrama Gantt */}
       <div className={styles.topbarSub}>
-        {/* Vista Gantt como único botón activo */}
+        {/* ❌ ELIMINADO: Botón de Recursos */}
         <div className={styles.viewTabs}>
           <button className={styles.viewTabActive}>
             {language === "es" ? "Vista Gantt" : "Gantt View"}
@@ -969,7 +1205,6 @@ startxref
 
         {/* Botones de Grilla, IA y Exportar */}
         <div className={styles.actionGroup}>
-          {/* BOTÓN DE CONFIGURACIÓN DE GRILLA - SOLO EL BOTÓN */}
           <button
             className={styles.gridConfigButton}
             onClick={() => setShowGridModal(true)}
@@ -987,12 +1222,13 @@ startxref
             <button
               className={styles.aiBadge}
               onClick={() => setShowIAChat(!showIAChat)}
+              disabled={isGenerating} // ← DESHABILITAR DURANTE CARGA
             >
               <div className={styles.aiIcon}>IA</div>
               {language === "es" ? "Asistente IA" : "AI Assistant"}
             </button>
           )}
-          {/* Contenedor para el menú desplegable de exportación */}
+
           <div className={styles.exportContainer}>
             <button
               className={styles.exportButton}
@@ -1001,7 +1237,6 @@ startxref
               {language === "es" ? "Exportar" : "Export"}
             </button>
 
-            {/* Menú desplegable de opciones de exportación */}
             {showExportOptions && (
               <div className={styles.exportOptions}>
                 <button onClick={() => handleExport("pdf")}>PDF</button>
@@ -1039,6 +1274,14 @@ startxref
             onEditTask={handleEditTask}
             onTasksUpdate={handleTasksUpdate}
             gridConfig={gridConfig}
+            users={internalUsers}
+            resourceAssignments={internalResourceAssignments}
+            showMiniAvatars={showMiniAvatars}
+            avatarSize={avatarSize}
+            maxAvatarsPerTask={maxAvatarsPerTask}
+            showResourceNames={showResourceNames}
+            showWorkloadIndicators={showWorkloadIndicators}
+            onUserClick={handleResourceClick}
           />
         </div>
       </div>
@@ -1052,7 +1295,7 @@ startxref
         +
       </button>
 
-      {/* MODAL DE CONFIGURACIÓN DE GRILLA - COMPONENTE EXTERNO */}
+      {/* MODAL DE CONFIGURACIÓN DE GRILLA */}
       <GridConfigModal
         isOpen={showGridModal}
         onClose={() => setShowGridModal(false)}
@@ -1086,21 +1329,33 @@ startxref
                   ? "Describe las tareas del proyecto..."
                   : "Describe the project tasks..."
               }
+              disabled={isGenerating} // ← DESHABILITAR DURANTE CARGA
             />
-            <button className={styles.iaChatSubmit} onClick={handleGenerate}>
-              {language === "es" ? "Generar tareas" : "Generate tasks"}
+            <button
+              className={styles.iaChatSubmit}
+              onClick={handleGenerate}
+              disabled={isGenerating || !prompt.trim()} // ← DESHABILITAR DURANTE CARGA
+            >
+              {isGenerating
+                ? language === "es"
+                  ? "Generando..."
+                  : "Generating..."
+                : language === "es"
+                ? "Generar tareas"
+                : "Generate tasks"}
             </button>
           </div>
         </div>
       )}
 
-      {/* Modal para añadir tarea */}
+      {/* MODAL PARA AÑADIR TAREA */}
       {showAddTaskForm && (
         <div className={styles.modalOverlay}>
           <AddTaskForm
             onAdd={handleAddTask}
             onCancel={() => setShowAddTaskForm(false)}
             parentTasks={tasks.filter((task) => !task.parent)}
+            users={internalUsers}
           />
         </div>
       )}

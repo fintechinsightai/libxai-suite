@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { Task } from "../types/ganttTypes";
+import { Task, User, ResourceAssignment } from "../types/ganttTypes";
 import styles from "../styles/GanttChart.module.css";
 import {
   addDays,
@@ -23,6 +23,8 @@ import { es } from "date-fns/locale";
 import { TimeScale } from "./LibGanttIA";
 import { TaskAIAlert, TaskAISuggestions, useTaskAI } from "./TaskAIComponents";
 import TaskDetailPanel from "./TaskDetailPanel";
+import AvatarGroup from "./AvatarGroup";
+import { getUsersForTask, calculateUserWorkload } from "../utils/resourceUtils";
 
 // ========== INTERFACES Y CONSTANTES ==========
 interface GanttChartProps {
@@ -33,6 +35,14 @@ interface GanttChartProps {
   onDeleteTask?: (taskId: string) => void;
   onEditTask?: (taskId: string, updatedTask: Task) => void;
   onTasksUpdate?: (tasks: Task[]) => void;
+  users?: User[];
+  resourceAssignments?: ResourceAssignment[];
+  showMiniAvatars?: boolean;
+  avatarSize?: "xs" | "sm" | "md";
+  maxAvatarsPerTask?: number;
+  showResourceNames?: boolean;
+  showWorkloadIndicators?: boolean;
+  onUserClick?: (user: User, taskId: string) => void;
 }
 
 interface GridConfig {
@@ -124,7 +134,6 @@ const getScaleConfig = (timeScale: TimeScale, tasks: Task[]) => {
   return configs[timeScale] || configs.week;
 };
 
-// ========== FUNCIÓN PARA INICIALIZAR FECHAS DE SUBTAREAS ==========
 const initializeSubtaskDates = (parentTask: Task): Task => {
   if (!parentTask.subtasks || parentTask.subtasks.length === 0) {
     return parentTask;
@@ -153,7 +162,49 @@ const initializeSubtaskDates = (parentTask: Task): Task => {
   };
 };
 
-// ========== CALCULAR DIMENSIONES DE TAREA PADRE MEJORADO ==========
+// ✅ NUEVA FUNCIÓN: Calcular progreso automático de tarea padre
+const calculateParentTaskProgress = (parentTask: Task): Task => {
+  if (!parentTask.subtasks || parentTask.subtasks.length === 0) {
+    return parentTask;
+  }
+
+  // Filtrar subtareas que tienen progreso definido
+  const subtasksWithProgress = parentTask.subtasks.filter(
+    (st) => st.progress !== undefined && st.progress !== null
+  );
+
+  if (subtasksWithProgress.length === 0) {
+    // Si no hay subtareas con progreso, mantener el progreso original del padre
+    return parentTask;
+  }
+
+  // Calcular progreso promedio de todas las subtareas con progreso
+  const totalProgress = subtasksWithProgress.reduce(
+    (sum, subtask) => sum + (subtask.progress || 0),
+    0
+  );
+  const calculatedProgress = Math.round(
+    totalProgress / subtasksWithProgress.length
+  );
+
+  console.log(`🔄 Calculando progreso automático para "${parentTask.name}":`, {
+    subtasksConProgreso: subtasksWithProgress.length,
+    progresoAnterior: parentTask.progress,
+    progresoCalculado: calculatedProgress,
+    subtareas: subtasksWithProgress.map((st) => ({
+      name: st.name,
+      progress: st.progress,
+    })),
+  });
+
+  return {
+    ...parentTask,
+    progress: calculatedProgress,
+    calculatedProgress: true, // Flag para indicar que es calculado automáticamente
+  };
+};
+
+// ✅ FUNCIÓN ACTUALIZADA: Calcular dimensiones Y progreso de tarea padre
 const calculateParentTaskDimensions = (parentTask: Task): Task => {
   if (!parentTask.subtasks || parentTask.subtasks.length === 0) {
     return parentTask;
@@ -177,16 +228,20 @@ const calculateParentTaskDimensions = (parentTask: Task): Task => {
     }
   });
 
+  let updatedTask = parentTask;
+
+  // Calcular fechas y duración
   if (earliestStart && latestEnd) {
     const newDuration = differenceInDays(latestEnd, earliestStart);
-    return {
+    updatedTask = {
       ...parentTask,
       startDate: earliestStart.toISOString().split("T")[0],
       duration: Math.max(1, newDuration),
     };
   }
 
-  return parentTask;
+  // ✅ NUEVO: Calcular progreso automáticamente después de calcular dimensiones
+  return calculateParentTaskProgress(updatedTask);
 };
 
 // ========== COMPONENTE PRINCIPAL ==========
@@ -198,6 +253,14 @@ const GanttChart: React.FC<GanttChartProps> = ({
   onDeleteTask,
   onEditTask,
   onTasksUpdate,
+  users = [],
+  resourceAssignments = [],
+  showMiniAvatars = false,
+  avatarSize = "sm",
+  maxAvatarsPerTask = 3,
+  showResourceNames = false,
+  showWorkloadIndicators = false,
+  onUserClick,
 }) => {
   // ========== ESTADOS ==========
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -228,18 +291,17 @@ const GanttChart: React.FC<GanttChartProps> = ({
   const gridRef = useRef<HTMLDivElement>(null);
   const gridContainerRef = useRef<HTMLDivElement>(null);
 
-  // *** ESTADO DE ARRASTRE MEJORADO CON SOPORTE PARA SUBTAREAS ***
   const dragStateRef = useRef({
     isDragging: false,
     taskId: null as string | null,
-    parentId: null as string | null, // Para subtareas, ID de la tarea padre
-    isSubtask: false, // Indica si es una subtarea o tarea principal
+    parentId: null as string | null,
+    isSubtask: false,
     initialTaskDate: null as Date | null,
     initialSubtaskDates: [] as { id: string; date: Date }[],
     startMouseX: 0,
     lastMouseX: 0,
     lastUpdateTime: 0,
-    accumulatedDays: 0, // Propiedad para acumular días movidos
+    accumulatedDays: 0,
     gridRect: null as DOMRect | null,
   });
 
@@ -249,7 +311,7 @@ const GanttChart: React.FC<GanttChartProps> = ({
   const handleMouseMoveRef = useRef<((e: MouseEvent) => void) | null>(null);
   const handleMouseUpRef = useRef<((e: MouseEvent) => void) | null>(null);
 
-  // ========== HOOKS ==========
+  // ========== HOOKS CALCULADOS ==========
   const config = useMemo(
     () => getScaleConfig(timeScale, internalTasks),
     [timeScale, internalTasks]
@@ -289,62 +351,306 @@ const GanttChart: React.FC<GanttChartProps> = ({
     selectedTaskId,
   } = useTaskAI(internalTasks);
 
-  // ========== SCROLL HORIZONTAL CON MOUSE ==========
-  useEffect(() => {
-    let isScrolling = false;
-    let startScrollLeft = 0;
-    let startX = 0;
+  // ========== FUNCIONES HELPER PARA RECURSOS CON DEBUGGING ==========
 
-    const handleWheelScroll = (e: WheelEvent) => {
-      if (!gridContainerRef.current) return;
+  // MAPPER DE RESOURCES A USERS
+  const mapResourceStringsToUsers = useCallback(
+    (resources: string[]): User[] => {
+      console.log("🔍 mapResourceStringsToUsers - entrada:", resources);
 
-      if (e.shiftKey || Math.abs(e.deltaX) > 0) {
-        e.preventDefault();
-        gridContainerRef.current.scrollLeft += e.deltaX || e.deltaY;
+      if (!resources || !Array.isArray(resources)) {
+        console.warn("❌ mapResourceStringsToUsers: resources no válido");
+        return [];
       }
-    };
 
-    const handleTouchStart = (e: TouchEvent) => {
-      if (!gridContainerRef.current) return;
-      isScrolling = true;
-      startScrollLeft = gridContainerRef.current.scrollLeft;
-      startX = e.touches[0].clientX;
-    };
+      const mappedUsers = resources
+        .map((resource, index) => {
+          console.log(`🔄 Procesando resource ${index}: "${resource}"`);
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isScrolling || !gridContainerRef.current) return;
-      e.preventDefault();
+          if (typeof resource !== "string") {
+            console.warn(`❌ Resource ${index} no es string:`, typeof resource);
+            return null;
+          }
 
-      const x = e.touches[0].clientX;
-      const diff = startX - x;
-      gridContainerRef.current.scrollLeft = startScrollLeft + diff;
-    };
+          // Buscar por nombre
+          const userByName = users.find(
+            (user) =>
+              user.name === resource ||
+              user.name.toLowerCase() === resource.toLowerCase()
+          );
 
-    const handleTouchEnd = () => {
-      isScrolling = false;
-    };
+          if (userByName) {
+            console.log(
+              `✅ Resource ${index} encontrado por nombre: ${userByName.name}`
+            );
+            return userByName;
+          }
 
-    const gridElement = gridContainerRef.current;
-    if (gridElement) {
-      gridElement.addEventListener("wheel", handleWheelScroll, {
-        passive: false,
-      });
-      gridElement.addEventListener("touchstart", handleTouchStart, {
-        passive: false,
-      });
-      gridElement.addEventListener("touchmove", handleTouchMove, {
-        passive: false,
-      });
-      gridElement.addEventListener("touchend", handleTouchEnd);
+          // Buscar por ID
+          if (resource.startsWith("user-")) {
+            const userById = users.find((user) => user.id === resource);
+            if (userById) {
+              console.log(
+                `✅ Resource ${index} encontrado por ID: ${userById.name}`
+              );
+              return userById;
+            }
+          }
 
-      return () => {
-        gridElement.removeEventListener("wheel", handleWheelScroll);
-        gridElement.removeEventListener("touchstart", handleTouchStart);
-        gridElement.removeEventListener("touchmove", handleTouchMove);
-        gridElement.removeEventListener("touchend", handleTouchEnd);
+          console.warn(
+            `❌ No se encontró usuario para resource: "${resource}"`
+          );
+          return null;
+        })
+        .filter((user): user is User => {
+          const isValid = user !== null && user && user.name && user.id;
+          if (!isValid) {
+            console.warn("❌ Resource filtrado por inválido:", user);
+          }
+          return isValid;
+        });
+
+      console.log("✅ mapResourceStringsToUsers - resultado:", mappedUsers);
+      return mappedUsers;
+    },
+    [users]
+  );
+
+  // CONVERTIDOR REFORZADO
+  const convertToUserObjects = useCallback(
+    (assignedUsers: any[]): User[] => {
+      console.log("🔄 convertToUserObjects - entrada:", assignedUsers);
+
+      if (!assignedUsers || !Array.isArray(assignedUsers)) {
+        console.warn("❌ convertToUserObjects: no es array válido");
+        return [];
+      }
+
+      const convertedUsers = assignedUsers
+        .map((item, index) => {
+          console.log(`🔄 Procesando item ${index}:`, item);
+
+          // Si ya es un objeto User válido
+          if (item && typeof item === "object" && item.id && item.name) {
+            console.log(`✅ Item ${index} es usuario válido`);
+            return item as User;
+          }
+
+          // Si es un string, buscar por nombre o ID
+          if (typeof item === "string") {
+            console.log(`🔍 Item ${index} es string: "${item}"`);
+
+            // Buscar por nombre
+            const userByName = users.find(
+              (user) =>
+                user.name === item ||
+                user.name.toLowerCase() === item.toLowerCase()
+            );
+
+            if (userByName) {
+              console.log(`✅ Encontrado por nombre: ${userByName.name}`);
+              return userByName;
+            }
+
+            // Buscar por ID
+            if (item.startsWith("user-")) {
+              const userById = users.find((user) => user.id === item);
+              if (userById) {
+                console.log(`✅ Encontrado por ID: ${userById.name}`);
+                return userById;
+              }
+            }
+
+            console.warn(`❌ No se encontró usuario para: "${item}"`);
+          }
+
+          console.warn(`❌ Item ${index} inválido:`, typeof item, item);
+          return null;
+        })
+        .filter((user): user is User => {
+          const isValid = user !== null && user && user.name && user.id;
+          if (!isValid) {
+            console.warn("❌ Usuario filtrado por inválido:", user);
+          }
+          return isValid;
+        });
+
+      console.log("✅ convertToUserObjects - resultado:", convertedUsers);
+      return convertedUsers;
+    },
+    [users]
+  );
+
+  // MAPPER REFORZADO CON FILTRO DE UNDEFINED
+  const mapResourcestoUsers = useCallback(
+    (task: Task): User[] => {
+      console.log("🔍 mapResourcestoUsers - entrada:", task);
+
+      // Validación inicial
+      if (!task || typeof task !== "object") {
+        console.warn("❌ mapResourcestoUsers: tarea inválida");
+        return [];
+      }
+
+      // Si ya tiene assignedUsers, usarlos
+      if (task.assignedUsers && Array.isArray(task.assignedUsers)) {
+        console.log("✅ Usando assignedUsers existentes:", task.assignedUsers);
+
+        // *** LIMPIEZA CRÍTICA: Filtrar undefined ANTES de procesar ***
+        const cleanedAssignedUsers = task.assignedUsers.filter((user) => {
+          const isNotUndefined = user !== undefined && user !== null;
+          if (!isNotUndefined) {
+            console.warn(
+              "❌ FILTRADO: usuario undefined/null detectado:",
+              user
+            );
+          }
+          return isNotUndefined;
+        });
+
+        console.log(
+          "🧹 AssignedUsers después de limpiar undefined:",
+          cleanedAssignedUsers
+        );
+
+        if (
+          cleanedAssignedUsers.length > 0 &&
+          typeof cleanedAssignedUsers[0] === "object"
+        ) {
+          // Validar que cada usuario sea válido
+          const validUsers = cleanedAssignedUsers.filter(
+            (user) => user && typeof user === "object" && user.name && user.id
+          );
+          console.log("✅ Usuarios válidos filtrados:", validUsers);
+          return validUsers as User[];
+        }
+
+        // Solo pasar usuarios no-undefined a convertToUserObjects
+        return convertToUserObjects(cleanedAssignedUsers); // ← AHORA ES SEGURO
+      }
+
+      // Si no tiene assignedUsers pero tiene resources, mapear resources
+      if (task.resources && Array.isArray(task.resources)) {
+        console.log("✅ Mapeando resources:", task.resources);
+        const mappedUsers = mapResourceStringsToUsers(task.resources);
+        console.log("✅ Usuarios mapeados desde resources:", mappedUsers);
+        return mappedUsers;
+      }
+
+      console.log("❌ No se encontraron recursos para mapear");
+      return [];
+    },
+    [convertToUserObjects, mapResourceStringsToUsers]
+  );
+
+  // FUNCIÓN PRINCIPAL CON DEBUG CRÍTICO
+  const getTaskUsers = useCallback(
+    (taskId: string): User[] => {
+      console.log("🔍 getTaskUsers - entrada taskId:", taskId);
+
+      // Validación inicial
+      if (!taskId || typeof taskId !== "string") {
+        console.warn("❌ getTaskUsers: taskId inválido");
+        return [];
+      }
+
+      // Buscar tanto en tareas principales como en subtareas
+      const findTaskRecursive = (tasks: Task[]): Task | undefined => {
+        console.log("🔍 Buscando en tasks:", tasks.length);
+        for (const task of tasks) {
+          if (task.id === taskId) {
+            console.log("✅ Tarea encontrada:", task.name);
+            return task;
+          }
+          if (task.subtasks) {
+            const found = findTaskRecursive(task.subtasks);
+            if (found) return found;
+          }
+        }
+        return undefined;
       };
+
+      const task = findTaskRecursive(internalTasks);
+
+      if (!task) {
+        console.warn("❌ No se encontró tarea con ID:", taskId);
+        return [];
+      }
+
+      console.log("✅ Tarea encontrada para procesar:", {
+        id: task.id,
+        name: task.name,
+        assignedUsers: task.assignedUsers,
+        tieneAssignedUsers: !!task.assignedUsers,
+        lengthAssignedUsers: task.assignedUsers?.length || 0,
+      });
+
+      // Usar mapResourcestoUsers en lugar de lógica duplicada
+      const mappedUsers = mapResourcestoUsers(task);
+      console.log("✅ Usuarios mapeados finales:", mappedUsers);
+
+      return mappedUsers;
+    },
+    [internalTasks, mapResourcestoUsers]
+  );
+
+  const getUserWorkloads = useCallback((): { [userId: string]: number } => {
+    const workloads: { [userId: string]: number } = {};
+
+    users.forEach((user) => {
+      const workload = calculateUserWorkload(user, resourceAssignments);
+      workloads[user.id] = workload.utilizationPercent;
+    });
+
+    return workloads;
+  }, [users, resourceAssignments]);
+
+  const handleUserClick = useCallback(
+    (user: User, taskId: string) => {
+      console.log(`👤 Click en usuario ${user.name} para tarea ${taskId}`);
+
+      if (onUserClick) {
+        onUserClick(user, taskId);
+      } else {
+        alert(
+          `Usuario: ${user.name}\nRol: ${user.role}\nEmail: ${
+            user.email || "No disponible"
+          }`
+        );
+      }
+    },
+    [onUserClick]
+  );
+
+  // ========== DEBUG PARA RECURSOS ==========
+  useEffect(() => {
+    if (showMiniAvatars) {
+      console.log("🎯 GanttChart - Debug recursos:", {
+        showMiniAvatars,
+        usersCount: users.length,
+        tasksCount: internalTasks.length,
+        tasksWithUsers: internalTasks.filter((t) => t.assignedUsers?.length)
+          .length,
+        resourceAssignmentsCount: resourceAssignments.length,
+      });
+
+      internalTasks.forEach((task) => {
+        const taskUsers = getTaskUsers(task.id);
+        if (taskUsers.length > 0) {
+          console.log(
+            `📋 Tarea "${task.name}" tiene ${taskUsers.length} usuarios:`,
+            taskUsers.map((u) => u.name)
+          );
+        }
+      });
     }
-  }, []);
+  }, [
+    showMiniAvatars,
+    users,
+    internalTasks,
+    resourceAssignments,
+    getTaskUsers,
+  ]);
 
   // ========== FUNCIONES DE ACTUALIZACIÓN ==========
   const updateTasks = useCallback(
@@ -492,6 +798,7 @@ const GanttChart: React.FC<GanttChartProps> = ({
             subtasks: updatedSubtasks,
           };
 
+          // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
           return calculateParentTaskDimensions(updatedParent);
         }
         return parentTask;
@@ -586,7 +893,7 @@ const GanttChart: React.FC<GanttChartProps> = ({
     [calculateTaskPosition, visibleDateRange.start, createResizeListeners]
   );
 
-  // ========== MANEJADORES DE ARRASTRE - MEJORADOS PARA TAREAS Y SUBTAREAS ==========
+  // ========== MANEJADORES DE ARRASTRE ==========
   const handleDragStart = useCallback(
     (
       e: React.DragEvent,
@@ -594,15 +901,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
       isSubtask: boolean = false,
       parentId?: string
     ) => {
-      console.log(
-        `🚀 [DRAG START] Iniciando arrastre de ${
-          isSubtask ? "subtarea" : "tarea"
-        }:`,
-        task.name,
-        "ID:",
-        task.id
-      );
-
       if (resizeState.isResizing) {
         e.preventDefault();
         return;
@@ -618,7 +916,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
       e.dataTransfer.setDragImage(dragImage, 0, 0);
       setTimeout(() => document.body.removeChild(dragImage), 0);
 
-      // *** OBTENER RECTÁNGULO DEL GRID PARA CÁLCULOS PRECISOS ***
       const gridRect =
         gridContainerRef.current?.getBoundingClientRect() || null;
 
@@ -627,7 +924,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
         : visibleDateRange.start;
       const initialSubtaskDates: { id: string; date: Date }[] = [];
 
-      // Si es una tarea principal y tiene subtareas, guardar sus fechas iniciales
       if (!isSubtask && task.subtasks && task.subtasks.length > 0) {
         task.subtasks.forEach((subtask) => {
           if (subtask.startDate) {
@@ -637,16 +933,8 @@ const GanttChart: React.FC<GanttChartProps> = ({
             });
           }
         });
-        console.log(
-          "📋 [DRAG START] Subtareas encontradas:",
-          initialSubtaskDates.length,
-          "(expandidas:",
-          openMap[task.id],
-          ")"
-        );
       }
 
-      // *** INICIALIZAR ESTADO CON CÁLCULO ACUMULATIVO INCLUYENDO TIPO DE TAREA ***
       dragStateRef.current = {
         isDragging: true,
         taskId: task.id,
@@ -664,19 +952,12 @@ const GanttChart: React.FC<GanttChartProps> = ({
       setIsDragging(true);
       setDraggedTaskId(task.id);
 
-      // Marcar cuando es una subtarea para comportamientos distintos
       if (isSubtask) {
         setIsDraggingSubtask(true);
         setDraggedParentId(parentId || null);
       }
-
-      console.log(
-        `✅ [DRAG START] Estado de arrastre de ${
-          isSubtask ? "subtarea" : "tarea"
-        } inicializado`
-      );
     },
-    [resizeState.isResizing, visibleDateRange.start, openMap]
+    [resizeState.isResizing, visibleDateRange.start]
   );
 
   const handleDragOver = useCallback(
@@ -693,128 +974,77 @@ const GanttChart: React.FC<GanttChartProps> = ({
         return;
       }
 
-      // Throttling para performance (30fps para mayor suavidad)
       const now = Date.now();
       if (now - dragState.lastUpdateTime < 33) {
         return;
       }
       dragState.lastUpdateTime = now;
 
-      // *** CÁLCULO ACUMULATIVO DE MOVIMIENTO ***
-      // Calcular la diferencia total desde el inicio del arrastre
       const currentMouseX = e.clientX;
       const totalDeltaX = currentMouseX - dragState.startMouseX;
-
-      // Convertir la diferencia en píxeles a días
       const totalDeltaDays = Math.round(totalDeltaX / config.unitWidth);
 
-      // Solo actualizar si el total de días ha cambiado
       if (totalDeltaDays === dragState.accumulatedDays) {
         dragState.lastMouseX = currentMouseX;
         return;
       }
 
-      console.log(
-        `🔄 [DRAG OVER] Delta total: ${totalDeltaDays} días (deltaX: ${totalDeltaX}px)`
-      );
-
-      // Actualizar el acumulado
       dragState.accumulatedDays = totalDeltaDays;
       dragState.lastMouseX = currentMouseX;
 
       const currentTasks = internalTasksRef.current;
 
-      // Rama diferente si es una subtarea o una tarea principal
       if (dragState.isSubtask && dragState.parentId) {
-        // MANEJAR ARRASTRE DE SUBTAREA
-        console.log(
-          `🔄 [DRAG OVER] Procesando arrastre de subtarea ${dragState.taskId} (padre: ${dragState.parentId})`
-        );
-
-        // Encontrar la tarea padre
         const parentIndex = currentTasks.findIndex(
           (t) => t.id === dragState.parentId
         );
-        if (parentIndex === -1) {
-          console.warn(
-            "⚠️ [DRAG OVER] Tarea padre no encontrada:",
-            dragState.parentId
-          );
-          return;
-        }
+        if (parentIndex === -1) return;
 
         const parentTask = currentTasks[parentIndex];
-        if (!parentTask.subtasks) {
-          console.warn("⚠️ [DRAG OVER] La tarea padre no tiene subtareas");
-          return;
-        }
+        if (!parentTask.subtasks) return;
 
-        // Encontrar la subtarea específica
         const subtaskIndex = parentTask.subtasks.findIndex(
           (st) => st.id === dragState.taskId
         );
-        if (subtaskIndex === -1) {
-          console.warn(
-            "⚠️ [DRAG OVER] Subtarea no encontrada:",
-            dragState.taskId
-          );
-          return;
-        }
+        if (subtaskIndex === -1) return;
 
-        // Calcular la nueva fecha para la subtarea
         const newSubtaskDate = addDays(
           dragState.initialTaskDate,
           totalDeltaDays
         );
 
-        // Clonar las tareas para no mutar el estado directamente
         const updatedTasks = [...currentTasks];
         const updatedParentTask = { ...parentTask };
-
-        // Crear una copia de las subtareas
         const updatedSubtasks = [...parentTask.subtasks];
 
-        // Actualizar la subtarea específica
         updatedSubtasks[subtaskIndex] = {
           ...updatedSubtasks[subtaskIndex],
           startDate: newSubtaskDate.toISOString().split("T")[0],
         };
 
-        // Actualizar la tarea padre con las subtareas actualizadas
         updatedParentTask.subtasks = updatedSubtasks;
-
-        // Actualizar la tarea padre en la lista principal y recalcular sus dimensiones
+        // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
         updatedTasks[parentIndex] =
           calculateParentTaskDimensions(updatedParentTask);
 
-        // Actualizar el estado con las tareas modificadas
         setInternalTasks(updatedTasks);
         setSvgUpdateKey((prev) => prev + 1);
         internalTasksRef.current = updatedTasks;
-
-        console.log("✅ [DRAG OVER] Subtarea actualizada correctamente");
       } else {
-        // MANEJAR ARRASTRE DE TAREA PRINCIPAL (código existente)
         const taskIndex = currentTasks.findIndex(
           (t) => t.id === dragState.taskId
         );
 
-        if (taskIndex === -1) {
-          console.warn("⚠️ [DRAG OVER] Tarea no encontrada:", dragState.taskId);
-          return;
-        }
+        if (taskIndex === -1) return;
 
         const task = currentTasks[taskIndex];
         const hasExpandedSubtasks =
           task.subtasks && task.subtasks.length > 0 && openMap[task.id];
 
-        // *** CREAR NUEVAS TAREAS CON FECHAS BASADAS EN LAS INICIALES ***
         const updatedTasks = [...currentTasks];
         const newTaskDate = addDays(dragState.initialTaskDate, totalDeltaDays);
 
         if (hasExpandedSubtasks && dragState.initialSubtaskDates.length > 0) {
-          console.log("🔄 [DRAG OVER] Actualizando subtareas expandidas...");
-
           const updatedSubtasks = task.subtasks!.map((subtask) => {
             const initialSubtaskData = dragState.initialSubtaskDates.find(
               (d) => d.id === subtask.id
@@ -840,19 +1070,11 @@ const GanttChart: React.FC<GanttChartProps> = ({
             subtasks: updatedSubtasks,
           };
 
+          // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
           updatedTasks[taskIndex] = calculateParentTaskDimensions(
             updatedTasks[taskIndex]
           );
-
-          console.log(
-            "✅ [DRAG OVER] Subtareas expandidas actualizadas correctamente"
-          );
         } else if (task.subtasks && task.subtasks.length > 0) {
-          console.log(
-            "🔄 [DRAG OVER] Actualizando tarea padre con subtareas NO expandidas..."
-          );
-
-          // *** MOVER SUBTAREAS BASÁNDOSE EN SUS FECHAS INICIALES ***
           const updatedSubtasks = task.subtasks.map((subtask) => {
             const initialSubtaskData = dragState.initialSubtaskDates.find(
               (d) => d.id === subtask.id
@@ -871,36 +1093,23 @@ const GanttChart: React.FC<GanttChartProps> = ({
 
             return subtask;
           });
-          // Solo actualizar las fechas, mantener la duración original
+
           updatedTasks[taskIndex] = {
             ...task,
             startDate: newTaskDate.toISOString().split("T")[0],
             subtasks: updatedSubtasks,
-            duration: task.duration, // Mantener duración original
+            duration: task.duration,
           };
-
-          console.log(
-            "✅ [DRAG OVER] Tarea padre con subtareas cerradas actualizada correctamente"
-          );
         } else {
-          console.log("🔄 [DRAG OVER] Actualizando tarea sin subtareas...");
-
           updatedTasks[taskIndex] = {
             ...task,
             startDate: newTaskDate.toISOString().split("T")[0],
           };
-
-          console.log(
-            "✅ [DRAG OVER] Tarea sin subtareas actualizada correctamente"
-          );
         }
 
-        // Actualizar las tareas en el estado
         setInternalTasks(updatedTasks);
         setSvgUpdateKey((prev) => prev + 1);
         internalTasksRef.current = updatedTasks;
-
-        console.log("✅ [DRAG OVER] Estado actualizado");
       }
     },
     [config.unitWidth, openMap, calculateParentTaskDimensions]
@@ -908,30 +1117,24 @@ const GanttChart: React.FC<GanttChartProps> = ({
 
   const handleDragEnd = useCallback(
     (e: React.DragEvent) => {
-      console.log("🏁 [DRAG END] Finalizando arrastre");
-
       const dragState = dragStateRef.current;
 
       if (!dragState.isDragging) {
         return;
       }
 
-      // *** APLICAR RECÁLCULO DE DIMENSIONES SOLO AL FINAL ***
       const finalTasks = internalTasksRef.current.map((task) => {
         if (
           task.subtasks &&
           task.subtasks.length > 0 &&
           (task.id === dragState.taskId || task.id === dragState.parentId)
         ) {
-          console.log(
-            `🔧 [DRAG END] Recalculando dimensiones finales para: ${task.name}`
-          );
+          // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
           return calculateParentTaskDimensions(task);
         }
         return task;
       });
 
-      // Resetear estado de arrastre
       dragStateRef.current = {
         isDragging: false,
         taskId: null,
@@ -951,19 +1154,16 @@ const GanttChart: React.FC<GanttChartProps> = ({
       setIsDraggingSubtask(false);
       setDraggedParentId(null);
 
-      // Actualizar con las dimensiones finales correctas
       updateTasks(finalTasks);
 
-      // Forzar actualización de líneas de conexión después de un pequeño delay
       setTimeout(() => {
         setSvgUpdateKey((prev) => prev + 1);
-        console.log("✅ [DRAG END] Arrastre finalizado completamente");
       }, 50);
     },
     [updateTasks, calculateParentTaskDimensions]
   );
 
-  // ========== MANEJADOR PARA ENTER EN INPUTS ==========
+  // ========== MANEJADORES DEL PANEL ==========
   const handleKeyDownInTaskEdit = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
@@ -978,7 +1178,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
     [internalTasks, editingTaskId, taskNameEdit, updateTasks]
   );
 
-  // ========== MANEJADORES DEL PANEL ==========
   const handleOpenPanel = useCallback((task: Task) => {
     setSelectedTask(task);
     setEditedTask({ ...task });
@@ -987,7 +1186,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
   }, []);
 
   const handleEditTask = useCallback(() => setIsEditMode(true), []);
-
   const handleDeleteTask = useCallback(() => {
     if (!editedTask) return;
 
@@ -1051,12 +1249,14 @@ const GanttChart: React.FC<GanttChartProps> = ({
       if (task.id === editedTask.id) {
         return editedTask;
       } else if (task.subtasks?.some((st) => st.id === editedTask.id)) {
-        return {
+        const updatedTask = {
           ...task,
           subtasks: task.subtasks.map((st) =>
             st.id === editedTask.id ? editedTask : st
           ),
         };
+        // ✅ NUEVO: Recalcular progreso cuando se actualiza una subtarea
+        return calculateParentTaskDimensions(updatedTask);
       }
       return task;
     });
@@ -1073,12 +1273,10 @@ const GanttChart: React.FC<GanttChartProps> = ({
     setConfirmDelete(false);
   }, []);
 
-  // Modificación para handleUpdateTask en GanttChart.tsx
   const handleUpdateTask = useCallback(
     (updatedTask: Task) => {
       setEditedTask(updatedTask);
 
-      // Si es una subtarea (tiene parent)
       if (updatedTask.parent) {
         const updatedTasks = [...internalTasks];
         const parentIndex = updatedTasks.findIndex(
@@ -1089,29 +1287,25 @@ const GanttChart: React.FC<GanttChartProps> = ({
           const parentTask = updatedTasks[parentIndex];
 
           if (parentTask.subtasks) {
-            // Actualizar la subtarea específica
             const updatedSubtasks = parentTask.subtasks.map((subtask) =>
               subtask.id === updatedTask.id ? updatedTask : subtask
             );
 
-            // Actualizar el task padre
             updatedTasks[parentIndex] = {
               ...parentTask,
               subtasks: updatedSubtasks,
             };
 
-            // Recalcular las dimensiones
+            // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
             updatedTasks[parentIndex] = calculateParentTaskDimensions(
               updatedTasks[parentIndex]
             );
 
-            // Actualizar el estado
             setInternalTasks(updatedTasks);
             setSvgUpdateKey((prev) => prev + 1);
           }
         }
       } else if (selectedTask?.id === updatedTask.id) {
-        // Para tareas normales (no subtareas)
         const updatedTasks = internalTasks.map((t) =>
           t.id === updatedTask.id ? updatedTask : t
         );
@@ -1428,15 +1622,11 @@ const GanttChart: React.FC<GanttChartProps> = ({
     closeSuggestions,
   ]);
 
-  // *** RENDERIZADO DE TAREAS - VERSION MEJORADA CON SOPORTE DE ARRASTRE PARA SUBTAREAS ***
+  // ========== RENDERIZADO DE TAREAS CON DEBUGGING CRÍTICO ==========
   const renderTasks = useCallback(() => {
-    console.log("🎨 [RENDER TASKS] Renderizando tareas...");
-
     const tasksWithDates = getTasksWithInitializedDates(internalTasks);
 
     return tasksWithDates.flatMap((task, index) => {
-      console.log(`📋 [RENDER] Procesando tarea ${index + 1}: ${task.name}`);
-
       const processedTask =
         task.subtasks && task.subtasks.length > 0
           ? calculateParentTaskDimensions(task)
@@ -1455,7 +1645,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
         isBefore(taskEnd, addDays(visibleDateRange.start, -30));
 
       if (isInvisible) {
-        console.log(`⚠️ [RENDER] Tarea ${task.name} no visible, saltando...`);
         return [];
       }
 
@@ -1463,8 +1652,41 @@ const GanttChart: React.FC<GanttChartProps> = ({
       const isLate =
         processedTask.progress < 100 && isAfter(CURRENT_DATE, taskEnd);
 
+      // ========== DEBUG CRÍTICO - Antes del error ==========
+      console.log("🚨 DEBUG CRÍTICO - Antes del error:");
+      console.log("Task ID:", processedTask.id);
+      console.log("Task name:", processedTask.name);
+
+      // Obtener usuarios para esta tarea CON DEBUG
+      const taskUsers = getTaskUsers(processedTask.id);
+
+      console.log("Task users que se están procesando:", taskUsers);
+      console.log("Cada usuario individual:");
+      taskUsers.forEach((user, userIndex) => {
+        console.log(`Usuario ${userIndex}:`, {
+          completo: user,
+          esObjeto: typeof user === "object",
+          esNull: user === null,
+          esUndefined: user === undefined,
+          tieneName: user?.name ? "SÍ" : "NO",
+          tieneId: user?.id ? "SÍ" : "NO",
+          propiedades: user ? Object.keys(user) : "sin propiedades",
+        });
+      });
+
+      // VALIDACIÓN DE SEGURIDAD EN EL RENDERIZADO
+      const safeTaskUsers = taskUsers.filter((user) => {
+        const isValid =
+          user && typeof user === "object" && user.name && user.id;
+        if (!isValid) {
+          console.error("🚨 Usuario inválido detectado en renderizado:", user);
+        }
+        return isValid;
+      });
+
       console.log(
-        `🔍 [RENDER] Tarea ${task.name} - Posición: ${taskLeft}px, Ancho: ${taskWidth}px`
+        "✅ Usuarios finales para renderizar:",
+        safeTaskUsers.map((u) => ({ name: u.name, id: u.id }))
       );
 
       const bars = [
@@ -1472,6 +1694,10 @@ const GanttChart: React.FC<GanttChartProps> = ({
           key={processedTask.id}
           className={`${styles.taskBar} ${isLate ? styles.late : ""} ${
             styles.parentTask
+          } ${
+            showMiniAvatars && safeTaskUsers.length > 0
+              ? styles.taskBarWithAvatars
+              : ""
           }`}
           style={{
             top: `${taskTop}px`,
@@ -1538,31 +1764,42 @@ const GanttChart: React.FC<GanttChartProps> = ({
               />
             </div>
           )}
+
+          {/* ========== AVATARES PARA TAREAS PRINCIPALES CON VALIDACIÓN ========== */}
+          {showMiniAvatars && safeTaskUsers.length > 0 && (
+            <AvatarGroup
+              users={safeTaskUsers.filter(
+                (user) =>
+                  user &&
+                  typeof user === "object" &&
+                  user.name &&
+                  user.id &&
+                  typeof user.name === "string" &&
+                  typeof user.id === "string"
+              )}
+              maxVisible={maxAvatarsPerTask}
+              size={avatarSize}
+              showNames={showResourceNames}
+              showWorkloadIndicators={showWorkloadIndicators}
+              userWorkloads={getUserWorkloads()}
+              onUserClick={(user) => handleUserClick(user, processedTask.id)}
+              className={styles.taskAvatars}
+            />
+          )}
         </div>,
       ];
 
-      // *** RENDERIZADO DE SUBTAREAS - IMPLEMENTACIÓN MEJORADA CON DRAG & DROP ***
+      // *** RENDERIZADO DE SUBTAREAS CON VALIDACIÓN ***
       if (
         openMap[processedTask.id] &&
         processedTask.subtasks &&
         processedTask.subtasks.length > 0
       ) {
-        console.log(
-          `📝 [RENDER] Renderizando ${processedTask.subtasks.length} subtareas para ${task.name}`
-        );
-
         processedTask.subtasks.forEach((subtask, subIndex) => {
           const { left: subLeft, width: subWidth } =
             calculateTaskPosition(subtask);
           const subTop =
             taskTop + 40 + SUBTASK_MARGIN + subIndex * (28 + SUBTASK_MARGIN);
-
-          console.log(
-            `  🔹 [RENDER] Subtarea ${subIndex + 1}: ${subtask.name}`
-          );
-          console.log(
-            `     📍 Fecha: ${subtask.startDate}, Posición: ${subLeft}px, Ancho: ${subWidth}px`
-          );
 
           const subAlert = analyzeTaskForAlerts(subtask);
           const subTaskStart = subtask.startDate
@@ -1572,11 +1809,20 @@ const GanttChart: React.FC<GanttChartProps> = ({
           const isSubtaskLate =
             subtask.progress < 100 && isAfter(CURRENT_DATE, subTaskEnd);
 
+          // Obtener usuarios para esta subtarea CON VALIDACIÓN
+          const subtaskUsers = getTaskUsers(subtask.id).filter(
+            (user) => user && typeof user === "object" && user.name && user.id
+          );
+
           bars.push(
             <div
               key={subtask.id}
               className={`${styles.subtaskBar} ${
                 isSubtaskLate ? styles.late : ""
+              } ${
+                showMiniAvatars && subtaskUsers.length > 0
+                  ? styles.subtaskBarWithAvatars
+                  : ""
               }`}
               data-sequence-index={subIndex + 1}
               data-progress={subtask.progress || 0}
@@ -1641,13 +1887,23 @@ const GanttChart: React.FC<GanttChartProps> = ({
                   />
                 </div>
               )}
+
+              {/* ========== AVATARES PARA SUBTAREAS CON VALIDACIÓN ========== */}
+              {showMiniAvatars && subtaskUsers.length > 0 && (
+                <AvatarGroup
+                  users={subtaskUsers}
+                  maxVisible={Math.max(1, maxAvatarsPerTask - 1)}
+                  size={avatarSize === "md" ? "sm" : "xs"}
+                  showNames={false}
+                  showWorkloadIndicators={showWorkloadIndicators}
+                  userWorkloads={getUserWorkloads()}
+                  onUserClick={(user) => handleUserClick(user, subtask.id)}
+                  className={styles.subtaskAvatars}
+                />
+              )}
             </div>
           );
         });
-
-        console.log(
-          `✅ [RENDER] Subtareas de ${task.name} renderizadas correctamente`
-        );
       }
 
       return bars;
@@ -1670,18 +1926,24 @@ const GanttChart: React.FC<GanttChartProps> = ({
     openMap,
     handleResizeStart,
     handleKeyDownInTaskEdit,
+    showMiniAvatars,
+    getTaskUsers,
+    maxAvatarsPerTask,
+    avatarSize,
+    showResourceNames,
+    showWorkloadIndicators,
+    getUserWorkloads,
+    handleUserClick,
   ]);
 
   // ========== EFECTOS Y LIMPIEZA ==========
   useEffect(() => {
-    console.log("🔄 [EFFECT] Tareas props actualizadas, sincronizando...");
     setInternalTasks(tasks);
   }, [tasks]);
 
   useEffect(() => {
     const listener = (e: CustomEvent<Task[]>) => {
       if (Array.isArray(e.detail)) {
-        console.log("📢 [EFFECT] Evento update-tasks recibido");
         setInternalTasks(e.detail);
         setSelectedTask(null);
         setEditedTask(null);
@@ -1803,6 +2065,58 @@ border: 1px solid rgba(255, 255, 255, 0.1);
 .subtaskBar {
 border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+/* ========== ESTILOS PARA AVATARES MEJORADOS ========== */
+.taskAvatars {
+position: absolute;
+top: 50%;
+right: 8px;
+transform: translateY(-50%);
+z-index: 5;
+pointer-events: auto;
+}
+
+.subtaskAvatars {
+position: absolute;
+top: 50%;
+right: 4px;
+transform: translateY(-50%);
+z-index: 5;
+pointer-events: auto;
+}
+
+/* Ajustar el padding del contenido para hacer espacio a los avatares */
+.taskBarWithAvatars {
+padding-right: 60px !important; /* Espacio para avatares */
+}
+
+.subtaskBarWithAvatars {
+padding-right: 40px !important; /* Espacio para avatares en subtareas */
+}
+
+/* Estilos para barras sin avatares (mantener original) */
+.taskBar:not(.taskBarWithAvatars) {
+padding-right: 8px;
+}
+
+.subtaskBar:not(.subtaskBarWithAvatars) {
+padding-right: 4px;
+}
+
+/* Mejorar visibilidad de avatares en hover */
+.taskBar:hover .taskAvatars,
+.subtaskBar:hover .subtaskAvatars {
+opacity: 1;
+transform: translateY(-50%) scale(1.05);
+transition: all 0.2s ease;
+}
+
+/* Asegurar que los avatares no interfieran con el arrastre */
+.taskBar.dragging .taskAvatars,
+.subtaskBar.dragging .subtaskAvatars {
+pointer-events: none;
+opacity: 0.7;
+}
 `;
     document.head.appendChild(styleElement);
     return () => document.head.removeChild(styleElement);
@@ -1826,6 +2140,62 @@ border: 1px solid rgba(255, 255, 255, 0.1);
   }, [svgUpdateKey]);
 
   useEffect(() => {
+    let isScrolling = false;
+    let startScrollLeft = 0;
+    let startX = 0;
+
+    const handleWheelScroll = (e: WheelEvent) => {
+      if (!gridContainerRef.current) return;
+
+      if (e.shiftKey || Math.abs(e.deltaX) > 0) {
+        e.preventDefault();
+        gridContainerRef.current.scrollLeft += e.deltaX || e.deltaY;
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!gridContainerRef.current) return;
+      isScrolling = true;
+      startScrollLeft = gridContainerRef.current.scrollLeft;
+      startX = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isScrolling || !gridContainerRef.current) return;
+      e.preventDefault();
+
+      const x = e.touches[0].clientX;
+      const diff = startX - x;
+      gridContainerRef.current.scrollLeft = startScrollLeft + diff;
+    };
+
+    const handleTouchEnd = () => {
+      isScrolling = false;
+    };
+
+    const gridElement = gridContainerRef.current;
+    if (gridElement) {
+      gridElement.addEventListener("wheel", handleWheelScroll, {
+        passive: false,
+      });
+      gridElement.addEventListener("touchstart", handleTouchStart, {
+        passive: false,
+      });
+      gridElement.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
+      gridElement.addEventListener("touchend", handleTouchEnd);
+
+      return () => {
+        gridElement.removeEventListener("wheel", handleWheelScroll);
+        gridElement.removeEventListener("touchstart", handleTouchStart);
+        gridElement.removeEventListener("touchmove", handleTouchMove);
+        gridElement.removeEventListener("touchend", handleTouchEnd);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
     return () => {
       if (handleMouseMoveRef.current) {
         document.removeEventListener("mousemove", handleMouseMoveRef.current);
@@ -1836,7 +2206,7 @@ border: 1px solid rgba(255, 255, 255, 0.1);
     };
   }, []);
 
-  // ========== RETURN ==========
+  // ========== RETURN FINAL CON JSX COMPLETO ==========
   const minWidth = Math.max(config.unitWidth * config.daysVisible, 1000);
 
   return (

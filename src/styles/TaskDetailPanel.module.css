@@ -411,26 +411,36 @@
 
 .taskResourcesButton {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 8px;
   width: 100%;
-  padding: 8px 12px;
-  background-color: var(--color-border);
-  border: none;
-  border-radius: 6px;
-  color: var(--color-text-primary);
-  font-size: 14px;
+  padding: 10px 16px;
+  background-color: var(--color-bg-accent);
+  border: 2px dashed var(--color-border);
+  border-radius: 8px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
   cursor: pointer;
-  transition: background-color 0.2s, color var(--transition-normal);
+  transition: all 0.2s ease;
 }
 
 .taskResourcesButton:hover {
-  background-color: var(--color-bg-accent);
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-accent-blue);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+}
+
+.taskResourcesButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .dropdownIcon {
   font-size: 10px;
-  margin-left: 4px;
+  margin-left: auto;
+  transition: transform 0.2s ease;
 }
 
 /* Sección de línea temporal */
@@ -831,6 +841,358 @@
   background-color: var(--color-bg-secondary);
 }
 
+/* ========== ESTILOS ADICIONALES PARA GESTIÓN DE RECURSOS ========== */
+
+/* Header de recursos mejorado */
+.taskResourcesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.resourceCount {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-accent);
+  padding: 3px 8px;
+  border-radius: 12px;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+/* Contenedor principal de usuarios asignados */
+.assignedUsersContainer {
+  margin-bottom: 16px;
+}
+
+.assignedUsersList {
+  margin-bottom: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Item individual de usuario asignado */
+.assignedUserItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background-color: var(--color-bg-accent);
+  border: 1px solid var(--color-border-light);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.assignedUserItem:hover {
+  background-color: var(--color-bg-secondary);
+  border-color: var(--color-accent-blue);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.assignedUserInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.assignedUserDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.assignedUserName {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition-normal);
+}
+
+.assignedUserRole {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+.assignedUserWorkload {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.workloadLabel {
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+.workloadValue {
+  font-weight: 600;
+}
+
+/* Botón para remover usuario */
+.unassignUserButton {
+  background: none;
+  border: none;
+  color: var(--color-accent-orange);
+  font-size: 16px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.unassignUserButton:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
+  color: #ef4444;
+}
+
+/* Mensaje cuando no hay usuarios asignados */
+.noAssignedUsers {
+  text-align: center;
+  padding: 16px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  background-color: var(--color-bg-accent);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  transition: background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+/* Contenedor para asignar usuario */
+.assignUserContainer {
+  position: relative;
+}
+
+.addUserIcon {
+  font-size: 14px;
+}
+
+/* Selector de usuarios desplegable */
+.userSelectorContainer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-xl);
+  max-height: 280px;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+  transition: background-color var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Container del buscador */
+.userSearchContainer {
+  padding: 12px;
+  border-bottom: 1px solid var(--color-border-light);
+  transition: border-color var(--transition-normal);
+}
+
+.userSearchInput {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-bg-accent);
+  color: var(--color-text-primary);
+  font-size: 13px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.userSearchInput:focus {
+  outline: none;
+  border-color: var(--color-accent-blue);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Lista de usuarios disponibles */
+.availableUsersList {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.availableUserItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.availableUserItem:hover {
+  background-color: var(--color-bg-accent);
+  transform: translateX(4px);
+}
+
+.availableUserItem:active {
+  transform: scale(0.98);
+}
+
+.availableUserItemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.availableUserItemName {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition-normal);
+}
+
+.availableUserItemRole {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+.availableUserItemWorkload {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+/* Mensaje cuando no hay usuarios disponibles */
+.noUsersFound {
+  text-align: center;
+  padding: 20px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 13px;
+  transition: color var(--transition-normal);
+}
+
+/* Indicadores de estado de carga de trabajo */
+.workloadIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background-color var(--transition-normal);
+}
+
+.workloadIndicator.low {
+  background-color: var(--color-accent-green);
+}
+
+.workloadIndicator.medium {
+  background-color: #f59e0b;
+}
+
+.workloadIndicator.high {
+  background-color: var(--color-accent-orange);
+}
+
+.workloadIndicator.overloaded {
+  background-color: #ef4444;
+}
+
+/* Avatar de usuario */
+.userAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-accent-blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: background-color var(--transition-normal);
+}
+
+.userAvatar.small {
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+
+/* Estilos específicos para recursos en modo edición */
+.editingResources .assignedUserItem {
+  border: 2px solid var(--color-accent-blue);
+  background-color: var(--color-bg-secondary);
+}
+
+.editingResources .taskResourcesButton {
+  border-color: var(--color-accent-blue);
+  background-color: var(--color-bg-secondary);
+}
+
+/* Indicador de cambios guardados */
+.resourcesSavedIndicator {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--color-accent-green);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 0.5s ease-in-out;
+  transition: background-color var(--transition-normal);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 /* Adaptaciones específicas para modo claro */
 [data-theme="light"] .taskDateBox,
 [data-theme="light"] .taskDependencyItem,
@@ -846,6 +1208,65 @@
   background-color: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: #ef4444;
+}
+
+[data-theme="light"] .assignedUserItem {
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="light"] .userSelectorContainer {
+  box-shadow: var(--shadow-xl);
+}
+
+/* Scroll personalizado para listas de usuarios */
+.availableUsersList::-webkit-scrollbar,
+.assignedUsersList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.availableUsersList::-webkit-scrollbar-track,
+.assignedUsersList::-webkit-scrollbar-track {
+  background: var(--color-bg-accent);
+  border-radius: 2px;
+}
+
+.availableUsersList::-webkit-scrollbar-thumb,
+.assignedUsersList::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+  transition: background-color var(--transition-normal);
+}
+
+.availableUsersList::-webkit-scrollbar-thumb:hover,
+.assignedUsersList::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Responsive adjustments para pantallas pequeñas */
+@media (max-width: 768px) {
+  .taskDetailPanel {
+    width: 100%;
+    position: fixed;
+    z-index: 20;
+  }
+
+  .assignedUserInfo {
+    gap: 8px;
+  }
+
+  .userAvatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .assignedUserName {
+    font-size: 12px;
+  }
+
+  .assignedUserRole {
+    font-size: 10px;
+  }
 }
 
 /* ----- ANIMACIONES ----- */
@@ -881,4 +1302,24 @@
   100% {
     transform: translateX(100%);
   }
+}
+
+/* Animación para la transición de estados de recursos */
+.resourcesTransition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efectos de hover para elementos interactivos */
+.interactiveElement {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactiveElement:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.interactiveElement:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
