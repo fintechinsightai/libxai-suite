@@ -424,7 +424,7 @@
   transition: all 0.2s ease;
 }
 
-.taskResourcesButton:hover {
+.taskResourcesButton:hover:not(:disabled) {
   background-color: var(--color-bg-secondary);
   border-color: var(--color-accent-blue);
   color: var(--color-text-primary);
@@ -435,6 +435,9 @@
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+  background-color: var(--color-border) !important;
+  color: var(--color-text-muted) !important;
+  border-color: var(--color-border) !important;
 }
 
 .dropdownIcon {
@@ -494,6 +497,13 @@
 .timelineDuration span {
   font-size: 13px;
   color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+.timelineResources {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-left: 4px;
   transition: color var(--transition-normal);
 }
 
@@ -633,6 +643,59 @@
 .showSuggestionsButton:active {
   transform: translateY(0);
   box-shadow: none;
+}
+
+/* Estilos para insights de recursos */
+.resourceInsights {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--color-border);
+  transition: border-top-color var(--transition-normal);
+}
+
+.resourceInsights h6 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  transition: color var(--transition-normal);
+}
+
+.resourceAlert {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  transition: all var(--transition-normal);
+}
+
+.resourceSuggestion {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--color-accent-green);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  transition: all var(--transition-normal);
+}
+
+.resourceWarning {
+  background-color: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  transition: all var(--transition-normal);
+}
+
+.taskAlertBox {
+  margin-bottom: 8px;
 }
 
 /* ----- ESTILOS PARA EDITAR Y ELIMINAR ----- */
@@ -1013,15 +1076,18 @@
     transform: translateY(0);
   }
 }
+
 /* Container del buscador */
 .userSearchContainer {
+  display: flex;
+  gap: 8px;
   padding: 12px;
   border-bottom: 1px solid var(--color-border-light);
   transition: border-color var(--transition-normal);
 }
 
 .userSearchInput {
-  width: 100%;
+  flex: 1;
   padding: 8px 12px;
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -1036,6 +1102,24 @@
   outline: none;
   border-color: var(--color-accent-blue);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Botón cancelar */
+.cancelUserSelectorButton {
+  padding: 6px 12px;
+  background-color: var(--color-text-muted);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.cancelUserSelectorButton:hover {
+  background-color: var(--color-text-muted);
+  filter: brightness(90%);
 }
 
 /* Lista de usuarios disponibles */
@@ -1065,6 +1149,60 @@
   transform: scale(0.98);
 }
 
+/* Corrección para availableUserInfo */
+.availableUserInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.availableUserName {
+  font-weight: 500;
+  color: var(--color-text-primary);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition-normal);
+}
+
+.availableUserRole {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+.availableUserStatus {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
+}
+
+/* Indicador de agregar usuario */
+.addUserIndicator {
+  font-size: 18px;
+  color: var(--color-accent-green);
+  font-weight: bold;
+  transition: transform 0.2s ease;
+}
+
+.availableUserItem:hover .addUserIndicator {
+  transform: scale(1.2);
+}
+
+/* Mensaje cuando no hay usuarios disponibles */
+.noAvailableUsers {
+  text-align: center;
+  padding: 20px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 13px;
+  transition: color var(--transition-normal);
+}
+
+/* Clases que estaban con nombres incorrectos - mantener compatibilidad */
 .availableUserItemInfo {
   display: flex;
   flex-direction: column;
@@ -1095,7 +1233,6 @@
   transition: color var(--transition-normal);
 }
 
-/* Mensaje cuando no hay usuarios disponibles */
 .noUsersFound {
   text-align: center;
   padding: 20px;

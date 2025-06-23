@@ -43,6 +43,8 @@ interface GanttChartProps {
   showResourceNames?: boolean;
   showWorkloadIndicators?: boolean;
   onUserClick?: (user: User, taskId: string) => void;
+  onUserAssign?: (taskId: string, userId: string) => void;
+  onUserUnassign?: (taskId: string, userId: string) => void;
 }
 
 interface GridConfig {
@@ -261,6 +263,8 @@ const GanttChart: React.FC<GanttChartProps> = ({
   showResourceNames = false,
   showWorkloadIndicators = false,
   onUserClick,
+  onUserAssign,
+  onUserUnassign,
 }) => {
   // ========== ESTADOS ==========
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -798,7 +802,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
             subtasks: updatedSubtasks,
           };
 
-          // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
           return calculateParentTaskDimensions(updatedParent);
         }
         return parentTask;
@@ -1023,7 +1026,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
         };
 
         updatedParentTask.subtasks = updatedSubtasks;
-        // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
         updatedTasks[parentIndex] =
           calculateParentTaskDimensions(updatedParentTask);
 
@@ -1070,7 +1072,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
             subtasks: updatedSubtasks,
           };
 
-          // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
           updatedTasks[taskIndex] = calculateParentTaskDimensions(
             updatedTasks[taskIndex]
           );
@@ -1129,7 +1130,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
           task.subtasks.length > 0 &&
           (task.id === dragState.taskId || task.id === dragState.parentId)
         ) {
-          // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
           return calculateParentTaskDimensions(task);
         }
         return task;
@@ -1186,6 +1186,7 @@ const GanttChart: React.FC<GanttChartProps> = ({
   }, []);
 
   const handleEditTask = useCallback(() => setIsEditMode(true), []);
+
   const handleDeleteTask = useCallback(() => {
     if (!editedTask) return;
 
@@ -1255,7 +1256,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
             st.id === editedTask.id ? editedTask : st
           ),
         };
-        // ✅ NUEVO: Recalcular progreso cuando se actualiza una subtarea
         return calculateParentTaskDimensions(updatedTask);
       }
       return task;
@@ -1296,7 +1296,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
               subtasks: updatedSubtasks,
             };
 
-            // ✅ ACTUALIZACIÓN: calculateParentTaskDimensions ahora incluye progreso automático
             updatedTasks[parentIndex] = calculateParentTaskDimensions(
               updatedTasks[parentIndex]
             );
@@ -1324,7 +1323,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
     setSelectedTask(null);
     setEditedTask(null);
   }, [editedTask, internalTasks, updateTasks]);
-
   // ========== FUNCIONES DE RENDERIZADO ==========
   const getDaysInRange = useCallback(() => {
     const days = [];
@@ -1652,27 +1650,8 @@ const GanttChart: React.FC<GanttChartProps> = ({
       const isLate =
         processedTask.progress < 100 && isAfter(CURRENT_DATE, taskEnd);
 
-      // ========== DEBUG CRÍTICO - Antes del error ==========
-      console.log("🚨 DEBUG CRÍTICO - Antes del error:");
-      console.log("Task ID:", processedTask.id);
-      console.log("Task name:", processedTask.name);
-
       // Obtener usuarios para esta tarea CON DEBUG
       const taskUsers = getTaskUsers(processedTask.id);
-
-      console.log("Task users que se están procesando:", taskUsers);
-      console.log("Cada usuario individual:");
-      taskUsers.forEach((user, userIndex) => {
-        console.log(`Usuario ${userIndex}:`, {
-          completo: user,
-          esObjeto: typeof user === "object",
-          esNull: user === null,
-          esUndefined: user === undefined,
-          tieneName: user?.name ? "SÍ" : "NO",
-          tieneId: user?.id ? "SÍ" : "NO",
-          propiedades: user ? Object.keys(user) : "sin propiedades",
-        });
-      });
 
       // VALIDACIÓN DE SEGURIDAD EN EL RENDERIZADO
       const safeTaskUsers = taskUsers.filter((user) => {
@@ -1683,11 +1662,6 @@ const GanttChart: React.FC<GanttChartProps> = ({
         }
         return isValid;
       });
-
-      console.log(
-        "✅ Usuarios finales para renderizar:",
-        safeTaskUsers.map((u) => ({ name: u.name, id: u.id }))
-      );
 
       const bars = [
         <div
@@ -2256,6 +2230,7 @@ opacity: 0.7;
         </div>
       </div>
 
+      {/* ✅ TASKDETAILPANEL CORREGIDO CON TODAS LAS PROPS NECESARIAS */}
       {editedTask && (
         <TaskDetailPanel
           task={editedTask}
@@ -2275,9 +2250,14 @@ opacity: 0.7;
           getTaskDates={getTaskDates}
           analyzeTaskForAlerts={analyzeTaskForAlerts}
           openSuggestionsForTask={openSuggestionsForTask}
+          users={users}
+          userWorkloads={getUserWorkloads()}
+          onUserAssign={onUserAssign}
+          onUserUnassign={onUserUnassign}
+          onUserClick={onUserClick}
+          enableResourceManagement={showMiniAvatars}
         />
       )}
-
       {renderSuggestions()}
     </div>
   );

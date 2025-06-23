@@ -82,27 +82,48 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
   const { startDate, endDate, duration } = taskDates;
   const predecessorTask = getPredecessorTask(task);
 
-  // ========== FUNCIONES HELPER PARA RECURSOS ==========
+  // ========== FUNCIONES HELPER PARA RECURSOS MEJORADAS ==========
 
-  // Obtener usuarios asignados a la tarea con validación
+  // Obtener usuarios asignados a la tarea con validación robusta
   const getAssignedUsers = (): User[] => {
-    if (!task.assignedUsers || !Array.isArray(task.assignedUsers)) {
+    if (!task || !task.assignedUsers) {
+      console.log("📋 No hay usuarios asignados a la tarea:", task?.id);
       return [];
     }
 
-    return task.assignedUsers.filter((user) => {
+    if (!Array.isArray(task.assignedUsers)) {
+      console.warn("⚠️ assignedUsers no es un array:", task.assignedUsers);
+      return [];
+    }
+
+    const validUsers = task.assignedUsers.filter((user) => {
       const isValid = user && typeof user === "object" && user.id && user.name;
       if (!isValid) {
         console.warn("TaskDetailPanel: Usuario inválido filtrado:", user);
       }
       return isValid;
     });
+
+    console.log(`👥 Usuarios asignados a tarea ${task.id}:`, validUsers.length);
+    return validUsers;
   };
 
   // Obtener usuarios disponibles para asignar
   const getAvailableUsers = (): User[] => {
+    if (!users || users.length === 0) {
+      console.log("📋 No hay usuarios disponibles en el sistema");
+      return [];
+    }
+
     const assignedUserIds = getAssignedUsers().map((user) => user.id);
-    return users.filter((user) => !assignedUserIds.includes(user.id));
+    const availableUsers = users.filter(
+      (user) => !assignedUserIds.includes(user.id)
+    );
+
+    console.log(
+      `🎯 Usuarios disponibles para asignar: ${availableUsers.length} de ${users.length}`
+    );
+    return availableUsers;
   };
 
   // Filtrar usuarios según término de búsqueda
@@ -113,69 +134,120 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
       return availableUsers;
     }
 
-    return availableUsers.filter(
+    const filtered = availableUsers.filter(
       (user) =>
         user.name.toLowerCase().includes(searchUserTerm.toLowerCase()) ||
         user.role?.toLowerCase().includes(searchUserTerm.toLowerCase()) ||
         user.email?.toLowerCase().includes(searchUserTerm.toLowerCase())
     );
+
+    console.log(
+      `🔍 Usuarios filtrados por "${searchUserTerm}": ${filtered.length}`
+    );
+    return filtered;
   };
 
-  // ========== MANEJADORES DE EVENTOS PARA RECURSOS ==========
+  // ========== MANEJADORES DE EVENTOS MEJORADOS ==========
 
   // Asignar usuario a la tarea
-  const handleAssignUser = (user: User) => {
-    console.log(`🔄 Asignando usuario ${user.name} a tarea ${task.id}`);
+  const handleAssignUser = async (user: User) => {
+    try {
+      console.log(
+        `🔄 Iniciando asignación de usuario ${user.name} (${user.id}) a tarea ${task.id}`
+      );
 
-    if (onUserAssign) {
-      onUserAssign(task.id, user.id);
-    } else {
-      // Lógica por defecto: actualizar la tarea directamente
-      const currentUsers = getAssignedUsers();
-      const isAlreadyAssigned = currentUsers.some((u) => u.id === user.id);
+      if (onUserAssign) {
+        // Usar función personalizada si está disponible
+        console.log("📞 Usando función personalizada onUserAssign");
+        await onUserAssign(task.id, user.id);
+      } else {
+        // Lógica por defecto mejorada
+        console.log("⚙️ Usando lógica por defecto para asignación");
+        const currentUsers = getAssignedUsers();
+        const isAlreadyAssigned = currentUsers.some((u) => u.id === user.id);
 
-      if (!isAlreadyAssigned) {
+        if (isAlreadyAssigned) {
+          console.warn(`⚠️ Usuario ${user.name} ya está asignado a la tarea`);
+          return;
+        }
+
         const updatedTask = {
           ...task,
           assignedUsers: [...currentUsers, user],
         };
+
+        console.log("📝 Actualizando tarea con nuevo usuario:", updatedTask);
         onUpdateTask(updatedTask);
       }
-    }
 
-    setShowUserSelector(false);
-    setSearchUserTerm("");
+      // Limpiar estado del selector
+      setShowUserSelector(false);
+      setSearchUserTerm("");
+      console.log("✅ Asignación completada exitosamente");
+    } catch (error) {
+      console.error("❌ Error al asignar usuario:", error);
+      alert(
+        `Error al asignar usuario ${user.name}. Por favor, intenta de nuevo.`
+      );
+    }
   };
 
   // Desasignar usuario de la tarea
-  const handleUnassignUser = (user: User) => {
-    console.log(`🔄 Desasignando usuario ${user.name} de tarea ${task.id}`);
+  const handleUnassignUser = async (user: User) => {
+    try {
+      console.log(
+        `🔄 Iniciando desasignación de usuario ${user.name} (${user.id}) de tarea ${task.id}`
+      );
 
-    if (onUserUnassign) {
-      onUserUnassign(task.id, user.id);
-    } else {
-      // Lógica por defecto: actualizar la tarea directamente
-      const updatedUsers = getAssignedUsers().filter((u) => u.id !== user.id);
-      const updatedTask = {
-        ...task,
-        assignedUsers: updatedUsers,
-      };
-      onUpdateTask(updatedTask);
+      if (onUserUnassign) {
+        // Usar función personalizada si está disponible
+        console.log("📞 Usando función personalizada onUserUnassign");
+        await onUserUnassign(task.id, user.id);
+      } else {
+        // Lógica por defecto mejorada
+        console.log("⚙️ Usando lógica por defecto para desasignación");
+        const currentUsers = getAssignedUsers();
+        const updatedUsers = currentUsers.filter((u) => u.id !== user.id);
+
+        const updatedTask = {
+          ...task,
+          assignedUsers: updatedUsers,
+        };
+
+        console.log("📝 Actualizando tarea sin el usuario:", updatedTask);
+        onUpdateTask(updatedTask);
+      }
+
+      console.log("✅ Desasignación completada exitosamente");
+    } catch (error) {
+      console.error("❌ Error al desasignar usuario:", error);
+      alert(
+        `Error al desasignar usuario ${user.name}. Por favor, intenta de nuevo.`
+      );
     }
   };
 
-  // Click en usuario asignado
+  // Click en usuario asignado con más información
   const handleUserClick = (user: User) => {
     if (onUserClick) {
       onUserClick(user, task.id);
     } else {
-      // Comportamiento por defecto: mostrar información del usuario
+      // Comportamiento por defecto mejorado
+      const workload = userWorkloads[user.id] || 0;
+      const workloadStatus =
+        workload >= 100
+          ? "Sobrecargado"
+          : workload >= 80
+          ? "Alta carga"
+          : workload >= 50
+          ? "Carga normal"
+          : "Disponible";
+
       alert(
-        `Usuario: ${user.name}\nRol: ${
-          user.role || "No especificado"
-        }\nEmail: ${user.email || "No disponible"}\nUtilización: ${
-          userWorkloads[user.id] || 0
-        }%`
+        `👤 ${user.name}\n` +
+          `🎭 Rol: ${user.role || "No especificado"}\n` +
+          `📧 Email: ${user.email || "No disponible"}\n` +
+          `📊 Utilización: ${workload}% (${workloadStatus})`
       );
     }
   };
@@ -231,9 +303,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
         <div
           className={styles.taskColorBar}
           style={{ backgroundColor: task.color || "#3b82f6" }}
-        >
-          {" "}
-        </div>
+        />
 
         {/* Sección de fechas */}
         <div className={styles.taskDatesSection}>
@@ -291,7 +361,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
             <div
               className={styles.taskProgressFill}
               style={{ width: `${task.progress || 0}%` }}
-            ></div>
+            />
           </div>
           <div className={styles.taskProgressInfo}>
             <div className={styles.progressValueContainer}>
@@ -301,7 +371,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                   <span className={styles.indicatorValue}>
                     +{task.progress - (selectedTask?.progress || 0)}%
                   </span>
-                  <div className={styles.indicatorArrow}></div>
+                  <div className={styles.indicatorArrow} />
                 </div>
               )}
             </div>
@@ -328,6 +398,21 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                 {getAssignedUsers().length} de {users.length} usuarios
               </span>
             </div>
+
+            {/* Debug info - Solo visible en desarrollo */}
+            {process.env.NODE_ENV === "development" && (
+              <div
+                style={{
+                  fontSize: "12px",
+                  color: "#888",
+                  marginBottom: "10px",
+                }}
+              >
+                🔍 Debug: Total usuarios: {users.length}, Asignados:{" "}
+                {getAssignedUsers().length}, Disponibles:{" "}
+                {getAvailableUsers().length}
+              </div>
+            )}
 
             {/* Lista de usuarios asignados */}
             <div className={styles.assignedUsersContainer}>
@@ -386,11 +471,19 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                 {!showUserSelector ? (
                   <button
                     className={styles.taskResourcesButton}
-                    onClick={() => setShowUserSelector(true)}
+                    onClick={() => {
+                      console.log("🔘 Abriendo selector de usuarios");
+                      console.log(
+                        `📊 Usuarios disponibles: ${getAvailableUsers().length}`
+                      );
+                      setShowUserSelector(true);
+                    }}
                     disabled={getAvailableUsers().length === 0}
                   >
                     <span className={styles.addUserIcon}>👤+</span>
-                    Asignar recurso...
+                    {getAvailableUsers().length === 0
+                      ? "Todos los usuarios asignados"
+                      : "Asignar recurso..."}
                     <span className={styles.dropdownIcon}>▼</span>
                   </button>
                 ) : (
@@ -401,12 +494,18 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                         type="text"
                         placeholder="Buscar usuario..."
                         value={searchUserTerm}
-                        onChange={(e) => setSearchUserTerm(e.target.value)}
+                        onChange={(e) => {
+                          setSearchUserTerm(e.target.value);
+                          console.log(
+                            `🔍 Búsqueda actualizada: "${e.target.value}"`
+                          );
+                        }}
                         className={styles.userSearchInput}
                         autoFocus
                       />
                       <button
                         onClick={() => {
+                          console.log("❌ Cancelando selector de usuarios");
                           setShowUserSelector(false);
                           setSearchUserTerm("");
                         }}
@@ -423,7 +522,12 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
                           <div
                             key={user.id}
                             className={styles.availableUserItem}
-                            onClick={() => handleAssignUser(user)}
+                            onClick={() => {
+                              console.log(
+                                `✅ Seleccionando usuario: ${user.name}`
+                              );
+                              handleAssignUser(user);
+                            }}
                           >
                             <MiniAvatar
                               user={user}
@@ -466,7 +570,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
           <div className={styles.taskTimelineInfo}>
             {startDate && (
               <div className={styles.timelinePoint}>
-                <div className={styles.timelineDot}></div>
+                <div className={styles.timelineDot} />
                 <div className={styles.timelineText}>
                   <strong>{formatDate(startDate)}</strong>
                   <span>Fecha de inicio</span>
@@ -476,7 +580,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({
 
             {endDate && (
               <div className={styles.timelinePoint}>
-                <div className={styles.timelineDot}></div>
+                <div className={styles.timelineDot} />
                 <div className={styles.timelineText}>
                   <strong>{formatDate(endDate)}</strong>
                   <span>Fecha de fin</span>
